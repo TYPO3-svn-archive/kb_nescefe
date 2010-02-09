@@ -1,0 +1,4 @@
+
+	# cat=basic; type=boolean; label=Copy recursive: When this option is set the content elements contained in a nested content element will get copied along with their container if the container get's copied.
+copyRecursive = 1
+

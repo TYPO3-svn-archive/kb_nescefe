@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'kb_nescefe'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="no_template_file">No template file found</label>
+			<label index="no_container">No container set or available</label>
+			<label index="no_renderObj">No renderObj defined</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="no_template_file">Keine Template Datei gefunden</label>
+			<label index="no_container">Keine Container gesetzt oder verfügbar</label>
+			<label index="no_renderObj">Kein renderObj definiert</label>
+		</languageKey>
+	</data>
+</T3locallang>

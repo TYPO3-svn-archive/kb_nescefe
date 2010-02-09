@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'kb_nescefe'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tt_content.CType_pi1_wizard">Nested content element container</label>
+			<label index="tt_content.CType_pi1_desc">This element allows you to create a container which in can hold multiply other content elements in different columns</label>
+			<label index="tt_content.CType_pi1">Content element container</label>
+			<label index="tt_content.cPos">Position in Parent Element</label>
+			<label index="tt_content.container">Container template</label>
+			<label index="tt_content.containerColumn">Container column</label>
+			<label index="tx_kbnescefe_containers">Container Template</label>
+			<label index="tx_kbnescefe_containers.name">Name</label>
+			<label index="tx_kbnescefe_containers.fetemplate">FE-Template</label>
+			<label index="tx_kbnescefe_containers.betemplate">BE-Template</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tt_content.CType_pi1_wizard">Nested Content Element Container</label>
+			<label index="tt_content.CType_pi1_desc">Dieses Element gestattet Ihnen einen Container zu erstellen in welchem mehrere Inhalts Elemente in verschiedenen Spalten untergebracht werden können.</label>
+			<label index="tt_content.CType_pi1">Inhalts Element Container</label>
+			<label index="tt_content.cPos">Position in übergeordnetem Element</label>
+			<label index="tt_content.container">Container template</label>
+			<label index="tt_content.containerColumn">Container Spalte</label>
+			<label index="tx_kbnescefe_containers">Container Template</label>
+			<label index="tx_kbnescefe_containers.name">Name</label>
+			<label index="tx_kbnescefe_containers.fetemplate">FE-Template</label>
+			<label index="tx_kbnescefe_containers.betemplate">BE-Template</label>
+		</languageKey>
+	</data>
+</T3locallang>

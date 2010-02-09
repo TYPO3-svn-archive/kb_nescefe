@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'kb_nescefe'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="select_container">Please select a container template</label>
+			<label index="container_invalid">Choosen container is invalid</label>
+			<label index="no_betemplatefile">No valid BE-Templatefile set in container</label>
+			<label index="column">Column ###IDX###</label>
+			<label index="newSection">NEW Section &quot;###LABEL###&quot;</label>
+			<label index="sectionList">Section list</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="select_container">Bitte wählen Sie ein Container Template aus</label>
+			<label index="container_invalid">Ausgewählter Container ist ungültig</label>
+			<label index="no_betemplatefile">Kein gültiges BE-Templatefile in Container eingestellt</label>
+			<label index="column">Spalte ###IDX###</label>
+			<label index="newSection">Neuen Abschnitt &quot;###LABEL###&quot;</label>
+			<label index="sectionList">Abschnitts Liste</label>
+		</languageKey>
+	</data>
+</T3locallang>

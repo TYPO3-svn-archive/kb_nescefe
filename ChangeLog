@@ -1,0 +1,20 @@
+2010-02-09 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Major version change
+	* The position of an element in the container is now stored in a separated field "parentPosition" instead of misusing the "colPos" field
+	* Now works with TYPO3 version >= 4.3.0
+
+2009-01-23 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Fixed a bug with content-slide (THX to Georg Ringer for reporting this)
+	* Added Icon for "Container Element" in TCEforms CType drop-down
+	* Added Icon in "new Content Element wizard"
+
+2008-02-28 Bernhard Kraft  <kraftb@kraftb.at>
+
+	* Removed a debug "print_r"
+
+2007-10-02 Bernhard Kraft  <kraftb@kraftb.at>
+
+	* Initial release
+
