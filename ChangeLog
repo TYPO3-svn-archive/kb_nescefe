@@ -1,6 +1,7 @@
 2010-02-09 Bernhard Kraft  <kraftb@think-open.at>
 
-	* Major version change
+	* Raised extension state to "stable"
+	* Change of major version to 1.0.0
 	* The position of an element in the container is now stored in a separated field "parentPosition" instead of misusing the "colPos" field
 	* Now works with TYPO3 version >= 4.3.0
 
