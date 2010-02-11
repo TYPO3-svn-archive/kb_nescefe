@@ -2,3 +2,6 @@
 	# cat=basic; type=boolean; label=Copy recursive: When this option is set the content elements contained in a nested content element will get copied along with their container if the container get's copied.
 copyRecursive = 1
 
+	# cat=basic; type=int+; label=Container Element colPos: This option allows you to set to which value the colPos field will get set for elements inside a container. Usually 10 is a good choice. It should usually not be visible in the normal page module except for debugging purposes.
+containerElementColPos = 10
+
