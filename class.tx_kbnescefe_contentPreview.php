@@ -63,7 +63,14 @@ class tx_kbnescefe_contentPreview	{
 			if ($row['container'])	{
 				$this->cObj = t3lib_div::makeInstance('tslib_cObj');
 				$this->pObj = &$pObj;
-				$this->lP = $lP;
+
+				$langField = $GLOBALS['TCA'][$table]['ctrl']['languageField'];
+				if ($langField) {
+					$this->lP = $row[$langField];
+				} else {
+					$this->lP = $lP;
+				}
+
 				$this->RTE = $GLOBALS['BE_USER']->isRTE();
 				$this->pageID = $row['pid'];
 				$this->tsConfig = t3lib_BEfunc::getModTSconfig($this->pageID, 'mod.tx_kbnescefe');
@@ -100,7 +107,7 @@ class tx_kbnescefe_contentPreview	{
 		$cpospart = '';
 		$showHidden = $this->pObj->tt_contentConfig['showHidden']?'':t3lib_BEfunc::BEenableFields('tt_content');
 		$showLanguage = $this->pObj->defLangBinding && $this->lP==0 ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid='.$this->lP;
-		$cpospart .= ' AND parentPosition LIKE \''.$this->id.'__%\'';
+		$cpospart .= ' AND parentPosition LIKE \''.$this->id.'\_\_%\'';
 
 		$queryParts = $this->pObj->makeQueryArray('tt_content', $this->pageID, $cpospart.$showHidden.$showLanguage);
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECT_queryArray($queryParts);

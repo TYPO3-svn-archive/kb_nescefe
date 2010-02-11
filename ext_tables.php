@@ -61,7 +61,7 @@ t3lib_extMgm::addToAllTCAtypes('tt_content', 'parentPosition');
 
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1'] = 'pages,layout,select_key';
 $TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1'] = 'container';
-$TCA['tt_content']['columns']['colPos']['config']['items'][] = Array('LLL:EXT:kb_nescefe/locallang_db.xml:tt_content.containerColumn', $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['containerElementColPos']);
+$TCA['tt_content']['columns']['colPos']['config']['items']['kb_nescefe'] = Array('LLL:EXT:kb_nescefe/locallang_db.xml:tt_content.containerColumn', $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['containerElementColPos']);
 
 t3lib_extMgm::addPlugin(Array('LLL:EXT:kb_nescefe/locallang_db.xml:tt_content.CType_pi1', $_EXTKEY.'_pi1', 'EXT:kb_nescefe/ext_icon.gif'), 'list_type');
 

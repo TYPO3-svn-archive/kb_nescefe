@@ -12,6 +12,11 @@
 			<label index="column">Column ###IDX###</label>
 			<label index="newSection">NEW Section &quot;###LABEL###&quot;</label>
 			<label index="sectionList">Section list</label>
+			<label index="update_label">Update Nested Content Elements</label>
+			<label index="update_message">If you have used the "kb_nescefe" extension already before, and updated the extension to the newest version 1.0.0 or later, you will need to run this update wizard once. Just press the "Update" button below. This will change some values in the tt_content table of the database.&lt;br /&gt;&lt;br /&gt;WARNING: Before pressing the "Update" button you should make a BACKUP of your entire database or at least of the tt_content table. In case any problems occur during update you can then restore the previous situation!!!</label>
+			<label index="update_finished">The update was performed properly. Please take care if all nested content element containers show their contained content elements properly! %d content elements inside of containers have been modified. %d containers have been modified</label>
+			<label index="update_none">There was no update necessary!</label>
+			<label index="update_error">An error occured during updating the content elments!</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="select_container">Bitte wählen Sie ein Container Template aus</label>
@@ -20,6 +25,11 @@
 			<label index="column">Spalte ###IDX###</label>
 			<label index="newSection">Neuen Abschnitt &quot;###LABEL###&quot;</label>
 			<label index="sectionList">Abschnitts Liste</label>
+			<label index="update_label">Update Nested Content Elements</label>
+			<label index="update_message">Wenn sie die "kb_nescefe" Erweiterung bereits früher benutzt haben und jetzt ein Update auf die neueste Version 1.0.0 oder höher durchgeführt haben müssen Sie diesen Update-Wizard einmal aufrufen. Einfach den "Update" Button unterhalb einmal betätigen. Dies wird einige Werte der tt_content Tabelle modifizieren. &lt;br /&gt;&lt;br /&gt;WARNUNG: Bevor sie den "Update" Button drücken, sollten Sie auf jeden Fall ein BACKUP der gesamten Datenbank, oder zumindest der tt_content Tabelle durchführen. Wenn beim update Probleme auftreten können sie mit Hilfe eines Backup die vorherige Situation wiederherstellen!!!</label>
+			<label index="update_finished">Update erfolgreich durchgeführt. Bitte überprüfen Sie ob alle Nested Content Elements Container die in ihnen beinhaltenen Inhaltselemente richtig anzeigen! Es wurden %d in Container befindliche Inhaltselemente modifziert. Es wurden %d Container Elemente modifiziert.</label>
+			<label index="update_none">Es musste kein Update durchgeführt werden!</label>
+			<label index="update_error">Beim durchführen des Update ist ein Fehler aufgetreten!</label>
 		</languageKey>
 	</data>
 </T3locallang>

@@ -72,7 +72,7 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 		$showLanguage = ($GLOBALS['TSFE']->sys_language_content==0) ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_content;
 		$ef = $GLOBALS['TSFE']->sys_page->enableFields('tt_content');
 		$pid = $this->cObj->data['pid'];
-		$rows = $GLOBALS['TSFE']->sys_page->getRecordsByField('tt_content', 'pid', $pid, ' AND parentPosition LIKE \''.$this->cObj->data['uid'].'__%\''.$ef, '', 'sorting');
+		$rows = $GLOBALS['TSFE']->sys_page->getRecordsByField('tt_content', 'pid', $pid, ' AND parentPosition LIKE \''.$this->cObj->data['uid'].'\_\_%\''.$ef, '', 'sorting');
 		$storage = array();
 		if (is_array($rows))	{
 			foreach ($rows as $row)	{

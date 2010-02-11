@@ -37,7 +37,7 @@
 class tx_kbnescefe_t3libtcemain	{
 
 	function processMove($table, $uid, $destPid, $moveRec, $updateFields, $pObj, $origDestPid = 0) {
-		$attachedRecords = t3lib_BEfunc::getRecordsByField('tt_content', 'pid', $moveRec['pid'], ' AND CType=\'list\' AND list_type=\'kb_nescefe_pi1\' AND parentPosition LIKE \''.$uid.'__%\'');
+		$attachedRecords = t3lib_BEfunc::getRecordsByField('tt_content', 'pid', $moveRec['pid'], ' AND CType=\'list\' AND list_type=\'kb_nescefe_pi1\' AND parentPosition LIKE \''.$uid.'\_\_%\'');
 		if (is_array($attachedRecords)) {
 			$mRec = t3lib_BEfunc::getRecord('tt_content', $uid);
 			$cmd = array();
@@ -71,16 +71,20 @@ class tx_kbnescefe_t3libtcemain	{
 		}
 	}
 
-	function processCopy($origUid, $newUid, &$pObj)	{
+	function processCopy($origUid, $newUid, &$pObj, $language = false) {
 		$origRec = t3lib_BEfunc::getRecord('tt_content', $origUid);
 		$newRec = t3lib_BEfunc::getRecord('tt_content', $newUid);
-		$attachedRecords = t3lib_BEfunc::getRecordsByField('tt_content', 'pid', $origRec['pid'], ' AND parentPosition LIKE \''.$origUid.'__%\'');
+		$attachedRecords = t3lib_BEfunc::getRecordsByField('tt_content', 'pid', $origRec['pid'], ' AND parentPosition LIKE \''.$origUid.'\_\_%\'');
 		$cmd = array();
 		$rowArr = array();
-		if (is_array($attachedRecords))	{
+		if (is_array($attachedRecords)) {
 			foreach ($attachedRecords as $row) {
 				$rowArr[$row['uid']] = $row;
-				$cmd['tt_content'][$row['uid']]['copy'] = $newRec['pid'];
+				if ($language) {
+					$cmd['tt_content'][$row['uid']]['localize'] = $language;
+				} else {
+					$cmd['tt_content'][$row['uid']]['copy'] = $newRec['pid'];
+				}
 			}
 		}
 		if (count($cmd)) {
@@ -95,9 +99,11 @@ class tx_kbnescefe_t3libtcemain	{
 					$parts = explode('__', $row['parentPosition'], 2);
 					$newParentPosition = $newUid.'__'.$parts[1];
 					$data['tt_content'][$copyUid]['parentPosition'] = $newParentPosition;
-					if (isset($pObj->setChildsToLang)) {
-						$data['tt_content'][$copyUid]['sys_language_uid'] = $pObj->setChildsToLang;
-					}
+//					if ($language) {
+//						$data['tt_content'][$copyUid]['sys_language_uid'] = $language;
+//					} elseif (isset($pObj->setChildsToLang)) {
+//						$data['tt_content'][$copyUid]['sys_language_uid'] = $pObj->setChildsToLang;
+//					}
 				}
 			}
 			$localTCE->start($data, array());
@@ -106,7 +112,7 @@ class tx_kbnescefe_t3libtcemain	{
 	}
 
 	function processDelete($id, $pObj) {
-		$attachedRecords = t3lib_BEfunc::getRecordsByField('tt_content', 'deleted', 0, ' AND parentPosition LIKE \''.$id.'__%\'');
+		$attachedRecords = t3lib_BEfunc::getRecordsByField('tt_content', 'deleted', 0, ' AND parentPosition LIKE \''.$id.'\_\_%\'');
 		if (is_array($attachedRecords)) {
 			$cmd = array();
 			foreach ($attachedRecords as $row) {
@@ -120,9 +126,13 @@ class tx_kbnescefe_t3libtcemain	{
 	}
 
 	function processCmdmap_postProcess($command, $table, $id, $value, &$pObj) {
-		if (($command=='copy') && ($table=='tt_content') && $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['copyRecursive']) {
+		if ((($command=='copy') || ($command=='localize')) && ($table=='tt_content') && $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['copyRecursive']) {
+			$language = false;
+			if ($command == 'localize') {
+				$language = $value;
+			}
 			if ($newId = $pObj->copyMappingArray['tt_content'][$id]) {
-				$this->processCopy($id, $newId, $pObj);
+				$this->processCopy($id, $newId, $pObj, $language);
 			}
 		}
 		if (($command=='delete')&&($table=='tt_content')) {
