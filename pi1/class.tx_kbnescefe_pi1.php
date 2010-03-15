@@ -44,15 +44,15 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 	 * @param	array		$conf: The PlugIn configuration
 	 * @return	The content that is displayed on the website
 	 */
-	function main($content,$conf)	{
+	function main($content,$conf) {
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 
 		$this->container = $GLOBALS['TSFE']->sys_page->getRawRecord('tx_kbnescefe_containers', $this->cObj->data['container']);
-		if (is_array($this->container))	{
+		if (is_array($this->container)) {
 			$file = t3lib_div::getFileAbsFileName($this->container['fetemplate']);
-			if (@is_file($file))	{
+			if (@is_file($file)) {
 				$this->func = t3lib_div::makeInstance('tx_kbnescefe_func');
 				$this->func->init($GLOBALS['TSFE']->id, $this->cObj->data['uid'], $GLOBALS['TSFE']->sys_language_content, $this->container, array(), $this->cObj);
 				$template = t3lib_div::getURL($file);
@@ -60,26 +60,26 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 				$paths = $this->func->getContentElementPaths($contentAreas);
 				$contentElements = $this->getContentElements();
 				return $this->func->renderContentAreas($template, $contentElements, $contentAreas, $this);
-			} else	{
+			} else {
 				return $this->pi_getLL('no_template_file');
 			}
-		} else	{
+		} else {
 			return $this->pi_getLL('no_container');
 		}
 	}
 
-	function getContentElements()	{
+	function getContentElements() {
 		$showLanguage = ($GLOBALS['TSFE']->sys_language_content==0) ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_content;
 		$ef = $GLOBALS['TSFE']->sys_page->enableFields('tt_content');
 		$pid = $this->cObj->data['pid'];
 		$rows = $GLOBALS['TSFE']->sys_page->getRecordsByField('tt_content', 'pid', $pid, ' AND parentPosition LIKE \''.$this->cObj->data['uid'].'\_\_%\''.$ef, '', 'sorting');
 		$storage = array();
-		if (is_array($rows))	{
-			foreach ($rows as $row)	{
+		if (is_array($rows)) {
+			foreach ($rows as $row) {
 				$OLrow = $GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
-				if ($OLrow)	{
+				if ($OLrow) {
 					$storage[$row['parentPosition']][] = $OLrow;
-				} else	{
+				} else {
 					$storage[$row['parentPosition']][] = $row;
 				}
 			}
@@ -88,17 +88,17 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 		return $storage;
 	}
 
-	function func_CONTENT($contentElements, $nkey, &$callObj)	{
+	function func_CONTENT($contentElements, $nkey, &$callObj) {
 		$id = $this->cObj->data['uid'];
 		$code = '';
-		if (is_array($contentElements[$id.'__'.$nkey]))	{
+		if (is_array($contentElements[$id.'__'.$nkey])) {
 			$localCObj = clone($this->cObj);
 
 			$parts = explode('_', $nkey);
 			$c = 0;
 			$res = array();
-			foreach ($parts as $part)	{
-				if (($c+1)%2)	{
+			foreach ($parts as $part) {
+				if (($c+1)%2) {
 					$res[] = $part;
 				}
 				$c++;
@@ -108,23 +108,24 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 			$conf = false;
 			$conf = trim($this->conf['renderObj.'][$this->container['uid'].'.'][$ckey.'.'][$GLOBALS['TSFE']->lang]);
 			$confArr = $this->conf['renderObj.'][$this->container['uid'].'.'][$ckey.'.'][$GLOBALS['TSFE']->lang.'.'];
-			if (!$conf)	{
+			if (!$conf) {
 				$conf = trim($this->conf['renderObj.'][$this->container['uid'].'.'][$ckey]);
 				$confArr = $this->conf['renderObj.'][$this->container['uid'].'.'][$ckey.'.'];
 			}
-			if (!$conf)	{
+			if (!$conf) {
 				$conf = trim($this->conf['renderObj.'][$this->container['uid']]);
 				$confArr = $this->conf['renderObj.'][$this->container['uid'].'.'];
 			}
-			if (!$conf)	{
+			if (!$conf) {
 				$conf = trim($this->conf['renderObj']);
 				$confArr = $this->conf['renderObj.'];
 			}
-			if (!$conf)	{
-				return $this->pi_getLL('no_renderObj');
+			if (!$conf) {
+				$conf = $GLOBALS['TSFE']->tmpl->setup['tt_content'];
+				$confArr = $GLOBALS['TSFE']->tmpl->setup['tt_content.'];
 			}
 
-			foreach ($contentElements[$id.'__'.$nkey] as $row)	{
+			foreach ($contentElements[$id.'__'.$nkey] as $row) {
 				$localCObj->start($row, 'tt_content');
 				$code .= $localCObj->cObjGetSingle($conf, $confArr, 'tx_kbnescefe_pi1:'.$id.'__'.$nkey);
 			}
@@ -136,7 +137,7 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kb_nescefe/pi1/class.tx_kbnescefe_pi1.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kb_nescefe/pi1/class.tx_kbnescefe_pi1.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kb_nescefe/pi1/class.tx_kbnescefe_pi1.php']);
 }
 

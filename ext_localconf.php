@@ -17,4 +17,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php'][
 $GLOBALS['TYPO3_CONF_VARS']['BE']['XCLASS']['t3lib/class.t3lib_clipboard.php'] = t3lib_extMgm::extPath($_EXTKEY).'class.ux_t3lib_clipboard.php';
 $GLOBALS['TYPO3_CONF_VARS']['BE']['XCLASS']['ext/cms/layout/class.tx_cms_layout.php'] = t3lib_extMgm::extPath($_EXTKEY).'class.ux_tx_cms_layout.php';
 
+t3lib_extMgm::addPItoST43($_EXTKEY, 'pi1/class.tx_kbnescefe_pi1.php', '_pi1', 'list_type', 1);
+
 ?>

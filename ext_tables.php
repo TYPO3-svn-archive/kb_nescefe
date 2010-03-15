@@ -65,8 +65,6 @@ $TCA['tt_content']['columns']['colPos']['config']['items']['kb_nescefe'] = Array
 
 t3lib_extMgm::addPlugin(Array('LLL:EXT:kb_nescefe/locallang_db.xml:tt_content.CType_pi1', $_EXTKEY.'_pi1', 'EXT:kb_nescefe/ext_icon.gif'), 'list_type');
 
-t3lib_extMgm::addStaticFile($_EXTKEY,'static/','Nested Content Elements');
-
 t3lib_extMgm::addPageTSConfig('
 mod.wizards.newContentElement.wizardItems.common.show := addToList(kb_nescefe_pi1);
 ');

@@ -1,3 +1,8 @@
+2010-02-15 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Removed static templates and included minimal required TypoScript by default.
+	* Added TypoScript top level object “tt_content” as default renderObj
+
 2010-02-11 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Created an update wizard which allows to update systems using kb_nescefe < 1.0.0 to the current version (See documentation)

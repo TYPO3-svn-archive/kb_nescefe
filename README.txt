@@ -40,15 +40,8 @@ TCEFORM.tt_content.container {
 of course replace the ###UID... marker with the UID of the page in which you
 created the "Container template" records ....
 
+
 Step 3.
--------
-Include the static Template "Nested Content Elements" into your ROOT TS
-Template.
-Be sure that this template get's included after(!) the CSS styled content
-static template.
-
-
-Step 4.
 -------
 Then just go to some content-page and create a content-element. From the
 pulldown box where you can select the type (Text, Text w. Image, etc.) select:
@@ -57,13 +50,13 @@ pulldown box where you can select the type (Text, Text w. Image, etc.) select:
 Choose a template you wish to use and then save and exit the record.
 
 
-Step 5.
+Step 4.
 -------
 In the Web>Page module you will be able to fill the container with content
 elements.
 
 
-Step 6.
+Step 5.
 -------
 View the results in the FE.
 
@@ -109,10 +102,8 @@ mod.tx_kbnescefe {
 		}
 }
 
-
-Wenn _0 oder z.B. _1 für eine Section verwendet wird sollte der gleiche index
-nicht auch auf gleicher Ebene für einen Inhaltsspalte verwendet werden -
-ansonsten kann man die labels nich eindeutig setzen
+If _0 or _1 gets used for a section you must not use the same index for a content
+column on the same level. Else the labels would get messed up.
 
 
 
