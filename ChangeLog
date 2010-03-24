@@ -1,3 +1,8 @@
+2010-03-24 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Fixed a bug: Double container element header output in FE
+	* Fixed a bug: When a page containing content elements got copied and recursiveCopy is active, sub elements were not referenced correctly (THX to Erich Reitmeier and Igor Reitmair for reporting this bug and Igor Reitmeir for sponsoring the extension)
+
 2010-02-15 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Removed static templates and included minimal required TypoScript by default.

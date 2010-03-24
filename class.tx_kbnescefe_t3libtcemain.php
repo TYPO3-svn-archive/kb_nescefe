@@ -135,8 +135,31 @@ class tx_kbnescefe_t3libtcemain	{
 				$this->processCopy($id, $newId, $pObj, $language);
 			}
 		}
+		if ((($command=='copy') || ($command=='localize')) && ($table=='pages') && $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['copyRecursive']) {
+			$this->updateParents($pObj);
+		}
 		if (($command=='delete')&&($table=='tt_content')) {
 			$this->processDelete($id, $pObj);
+		}
+	}
+
+	function updateParents(&$pObj) {
+		$data = array();
+		foreach ($pObj->copyMappingArray['tt_content'] as $origUid => $newUid) {
+			$origRec = t3lib_BEfunc::getRecord('tt_content', abs($origUid));
+			$newRec = t3lib_BEfunc::getRecord('tt_content', abs($newUid));
+			if ($origRec['parentPosition'] && $newRec) {
+				$parts = explode('__', $origRec['parentPosition'], 2);
+				$origParentUid = intval($parts[0]);
+				if ($newParentUid = intval($pObj->copyMappingArray['tt_content'][$origParentUid])) {
+					$data['tt_content'][$newRec['uid']]['parentPosition'] = $newParentUid.'__'.$parts[1];
+				}
+			}
+		}
+		if (count($data)) {
+			$localTCE = clone($pObj);
+			$localTCE->start($data, array());
+			$localTCE->process_datamap();
 		}
 	}
 
