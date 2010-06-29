@@ -49,6 +49,9 @@ class tx_kbnescefe_contentPreview	{
 
 
 	function renderPluginPreview($params, &$parentObject)	{
+		if (get_class($parentObject) === 'tx_templavoila_module1') {
+			return 'The extension "kb_nescefe" is not compatible with TemplaVoila. Use TemplaVoila Flexible Content Elements instead.';
+		}
 		if ($parentObject->defLangBinding && ($parentObject->tt_contentConfig['sys_language_uid'] == 0)) {
 			$lP = 0;
 		} else {
@@ -140,6 +143,7 @@ class tx_kbnescefe_contentPreview	{
 			$keys = array_keys($contentElements[$this->id.'__'.$nkey]);
 			$cnt = 0;
 			foreach ($contentElements[$this->id.'__'.$nkey] as $row)	{
+				$row_code = '';
 				if ($cnt)		{
 					if ($cnt>1)	{
 						$this->pObj->tt_contentData['prev'][$row['uid']] = -$contentElements[$this->id.'__'.$nkey][$keys[$cnt-2]]['uid'];
@@ -153,8 +157,18 @@ class tx_kbnescefe_contentPreview	{
 				}
 
 				$isRTE = $this->RTE && $this->pObj->isRTEforField('tt_content', $row, 'bodytext');
-				$code .= $this->pObj->tt_content_drawHeader($row, $this->pObj->tt_contentConfig['showInfo']?15:5, $this->pObj->defLangBinding && $this->lP>0, true);
-				$code .= $this->pObj->tt_content_drawItem($row, $isRTE, $this->lP);
+				$row_code .= $this->pObj->tt_content_drawHeader($row, $this->pObj->tt_contentConfig['showInfo']?15:5, $this->pObj->defLangBinding && $this->lP>0, true);
+
+					// Take care of new 4.4 skin
+				if (t3lib_div::compat_version('4.4')) {
+					$row_code .= '<div '.($row['_ORIG_uid'] ? ' class="ver-element"' :'').'>'.$this->pObj->tt_content_drawItem($row, $isRTE, $this->lP).'</div>';
+					$row_code .= '</div>';
+					$statusHidden = ($this->pObj->isDisabled('tt_content', $row) ? ' t3-page-ce-hidden' : '');
+					$row_code = '<div class="t3-page-ce' . $statusHidden . '">' . $row_code. '</div>';
+				} else {
+					$row_code .= $this->pObj->tt_content_drawItem($row, $isRTE, $this->lP);
+				}
+				$code .= $row_code;
 				$cnt++;
 			}
 		}

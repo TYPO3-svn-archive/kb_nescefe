@@ -126,6 +126,7 @@ class tx_kbnescefe_t3libtcemain	{
 	}
 
 	function processCmdmap_postProcess($command, $table, $id, $value, &$pObj) {
+// echo "cmdMap: ".$command.":".$table.":".$id.":".$value."<br />\n";
 		if ((($command=='copy') || ($command=='localize')) && ($table=='tt_content') && $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['copyRecursive']) {
 			$language = false;
 			if ($command == 'localize') {
@@ -164,6 +165,7 @@ class tx_kbnescefe_t3libtcemain	{
 	}
 
 	function processDatamap_postProcessFieldArray($command, $table, $id, $value, &$pObj) {
+// echo "dataMap: ".$command.":".$table.":".$id.":".$value."<br />\n";
 	}
 
 }

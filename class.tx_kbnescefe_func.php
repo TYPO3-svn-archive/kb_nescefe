@@ -156,6 +156,7 @@ class tx_kbnescefe_func	{
 					$code .= $procObj->func_HEADER($contentElements, $nkey, $this);
 				} 
 				$template = $this->cObj->substituteMarker($template, '###HEADER_'.$key.'###', $code);
+				
 			}
 			if ($typeArr['CONTENT'])	{
 				$code = '';

@@ -2,6 +2,13 @@
 	# cat=basic; type=boolean; label=Copy recursive: When this option is set the content elements contained in a nested content element will get copied along with their container if the container get's copied.
 copyRecursive = 1
 
+	# cat=basic; type=boolean; label=Templates on normal pages: By using this option you can put nescefe template records into normal pages and not only into sys-folders. Enabling this option makes it easier for you to export/import pages with kb_nescefe records from one site to another by including all used nescefe template records in the export.
+templatesOnPages = 0
+
+	# cat=basic; type=boolean; label=Template record as soft reference: When you are exporting/importing records from one site to another it is possible that the nescefe template records have different UIDs on the target system. When this option is set you will be able to set the "Container" field of nescefe records to "editable" on exporting. This will allow you to fill in the correct UID of the corresponding template record on the target system.
+templateSoftReference = 0
+
 	# cat=basic; type=int+; label=Container Element colPos: This option allows you to set to which value the colPos field will get set for elements inside a container. Usually 10 is a good choice. It should usually not be visible in the normal page module except for debugging purposes.
 containerElementColPos = 10
+
 

@@ -95,7 +95,9 @@ class tx_kbnescefe_itemproc {
 											$newTmp[] = $tmpPath;
 										}
 									}
-									if (!$hx--) exit();
+									if (!$hx--) {
+										die('Too many recursions');
+									}
 									$tmp = $newTmp;
 								} while ($hasStars);
 								foreach ($tmp as $tpath)	{

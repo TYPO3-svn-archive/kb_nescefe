@@ -11,7 +11,8 @@ $tempColumns = array(
 			'items' => Array (
 			),
 			'itemsProcFunc' => 'EXT:kb_nescefe/class.tx_kbnescefe_itemproc.php:tx_kbnescefe_itemproc->contentPositions',
-			'default' => '0'
+			'default' => '0',
+			'softref' => 'kb_nescefe_parent',
 		),
 	),
 	'container' => array(
@@ -26,9 +27,14 @@ $tempColumns = array(
 			'size' => '1',
 			'maxitems' => '1',
 			'minitems' => '0',
+			'softref' => 'kb_nescefe_container',
 		)
 	),
 );
+			
+if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['templateSoftReference']) {
+	$tempColumns['container']['config']['softref'] = 'kb_nescefe_container';
+}
 
 $TCA['tx_kbnescefe_containers'] = Array (
 	'ctrl' => Array (
@@ -71,5 +77,8 @@ mod.wizards.newContentElement.wizardItems.common.show := addToList(kb_nescefe_pi
 
 $GLOBALS['TBE_MODULES_EXT']['xMOD_db_new_content_el']['addElClasses']['tx_kbnescefe_dbNewContentEl'] = PATH_kb_nescefe.'class.tx_kbnescefe_dbNewContentEl.php';
 
+if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['templatesOnPages']) {
+	t3lib_extMgm::allowTableOnStandardPages('tx_kbnescefe_containers');
+}
 
 ?>

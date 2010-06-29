@@ -59,9 +59,9 @@ class tx_kbnescefe_layout {
 		$pasteLink = $this->getPasteLink($params['row']);
 		$copyLink = $this->getCopyCutLink($params['row'], 'copy');
 		$cutLink = $this->getCopyCutLink($params['row'], 'cut');
-		$this->insertIntoArrayAfter($params['content'], array('edit', 'control_top'), 'pasteLink', $pasteLink);
-		$this->insertIntoArrayAfter($params['content'], array('move_down', 'move_up', 'new', 'edit', 'control_top'), 'cutLink', $cutLink);
-		$this->insertIntoArrayAfter($params['content'], array('move_down', 'move_up', 'new', 'edit', 'control_top'), 'copyLink', $copyLink);
+		$this->insertIntoArray($params['content'], array('edit', 'control_top'), 'pasteLink', $pasteLink);
+		$this->insertIntoArray($params['content'], array('move_wrap_begin', 'move_down', 'move_up', 'new', 'edit', 'control_top'), array('move_wrap_begin'), 'cutLink', $cutLink);
+		$this->insertIntoArray($params['content'], array('move_wrap_begin', 'move_down', 'move_up', 'new', 'edit', 'control_top'), array('move_wrap_begin'), 'copyLink', $copyLink);
 	}
 
 	function drawColHeader($params, &$parentObject) {
@@ -76,19 +76,20 @@ class tx_kbnescefe_layout {
 			if (preg_match('/[&\?]parentPosition=([0-9a-zA-Z_\:]+)(&|$)/', $params['newParams'], $parentPosMatches)==1) {
 				$parentPosition = $parentPosMatches[1];
 			}
-			$pasteLink = $this->getPasteLink(array(), $colPos, $slID, $parentPosition);
-			$this->insertIntoArrayAfter($params['content'], array('new', 'edit', 'control_top'), 'pasteLink', $pasteLink);
+			$pasteLink = $this->getPasteLink(array(), $colPos, $slID, $parentPosition, true);
+			$this->insertIntoArray($params['content'], array('new', 'edit', 'control_top'), array(), 'pasteLink', $pasteLink);
 		}
 		
 	}
 
-	function insertIntoArrayAfter(&$array, $position, $key, $value) {
+	function insertIntoArray(&$array, $position, $beforeKeys, $key, $value) {
 		$currentKeys = array_keys($array);
 		list($afterKey) = array_intersect($position, $currentKeys);
 		if ($afterKey) {
 			$pos = array_search($afterKey, $currentKeys);
-			$pre = array_slice($array, 0, $pos+1, true);
-			$post = array_slice($array, $pos+1, NULL, true);
+			$addOffset = in_array($afterKey, $beforeKeys)?0:1;
+			$pre = array_slice($array, 0, $pos+$addOffset, true);
+			$post = array_slice($array, $pos+$addOffset, NULL, true);
 			$new = array($key => $value);
 			$array = array_merge($pre, $new, $post);
 		} else {
@@ -96,23 +97,34 @@ class tx_kbnescefe_layout {
 		}
 	}
 
-	function getPasteLink($row, $colPos = 0, $sys_language_uid = 0, $parentPosition = '')	{
+	function getPasteLink($row, $colPos = 0, $sys_language_uid = 0, $parentPosition = '', $header = false)	{
+		global $LANG;
 		if (!($this->clipObj && method_exists($this->clipObj, 'elFromTable'))) {
 			$this->initClipboard();
 		}
 		$elFromTable = $this->clipObj->elFromTable('tt_content');
 		if (count($elFromTable))	{
-			return '&nbsp; <a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,'after', $elFromTable)).'"><img'.t3lib_iconWorks::skinImg($this->parentObject->backPath,'gfx/clip_pasteafter.gif','width="12" height="12"').' title="'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_file_list.php:clip_paste',1).'" alt="" /></a> &nbsp;';
+			if (t3lib_div::compat_version('4.4')) {
+				return '<a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,'after', $elFromTable)).'" title="' . $LANG->sL('LLL:EXT:lang/locallang_mod_web_list.xml:clip_paste'.($header?'Into':'After'), TRUE) . '">' . t3lib_iconWorks::getSpriteIcon('actions-document-paste-'.($header?'into':'after')) . '</a>';
+			} else {
+				return '&nbsp; <a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,$header?'into':'after', $elFromTable)).'"><img'.t3lib_iconWorks::skinImg($this->parentObject->backPath,'gfx/clip_paste'.($header?'into':'after').'.gif','width="12" height="12"').' title="'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_web_list.php:clip_paste'.($header?'Into':'After'), TRUE).'" alt="" /></a> &nbsp;';
+			}
 		}
 		return '';
 	}
 	
 	function getCopyCutLink($row, $mode)	{
+		global $LANG;
 		if (!($this->clipObj&&method_exists($this->clipObj, 'elFromTable')))	{
 			$this->initClipboard();
 		}
 		$isSel = $this->clipObj->isSelected('tt_content', $row['uid']);
-		return ' <a href="'.$this->clipObj->selUrlDB('tt_content', $row['uid'], (($mode=='copy')||($isSel==$mode))?1:0, $isSel==$mode?1:0).'o"><img'.t3lib_iconWorks::skinImg($this->parentObject->backPath,'gfx/clip_'.$mode.($mode==$isSel?'_h':'').'.gif','width="12" height="12"').' title="'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_file_list.php:clip_'.$mode,1).'" alt="" /></a> ';
+		if (t3lib_div::compat_version('4.4')) {
+			$sprite = 'actions-edit-'.$mode.($mode==$isSel?'-release':'');
+			return '<a href="'.$this->clipObj->selUrlDB('tt_content', $row['uid'], (($mode=='copy')||($isSel==$mode))?1:0, $isSel==$mode?1:0).'o" title="' . $LANG->sL('LLL:EXT:lang/locallang_core.php:cm.' . $mode, TRUE) . '">' . t3lib_iconWorks::getSpriteIcon($sprite) . '</a>';
+		} else {
+			return ' <a href="'.$this->clipObj->selUrlDB('tt_content', $row['uid'], (($mode=='copy')||($isSel==$mode))?1:0, $isSel==$mode?1:0).'o" title="' . $LANG->sL('LLL:EXT:lang/locallang_core.php:cm.' . $mode, TRUE) . '"><img'.t3lib_iconWorks::skinImg($this->parentObject->backPath,'gfx/clip_'.$mode.($mode==$isSel?'_h':'').'.gif','width="12" height="12"').' title="'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_file_list.php:clip_'.$mode,1).'" alt="" /></a> ';
+		}
 	}
 
 }

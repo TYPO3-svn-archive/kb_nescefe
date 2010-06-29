@@ -1,3 +1,13 @@
+2010-06-29 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Making an Import/Export of kb_nescefe elements or pages with such elements now works properly
+	* Now works with new TYPO3 Version 4.4.0
+
+2010-06-23 Bernhard Kraft  <kraftb@think-open.at>
+
+	* kb_nescefe containers can now get properly exported / imported along with all content elements inside them (Sponsored by bluemars.net)
+	* Changed extension version to 1.1.0 and uploaded new version to TER
+
 2010-05-10 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Uploaded Extension to TER as 1.0.3
