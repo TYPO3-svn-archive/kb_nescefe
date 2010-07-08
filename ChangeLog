@@ -13,7 +13,6 @@
 2010-06-23 Bernhard Kraft  <kraftb@think-open.at>
 
 	* kb_nescefe containers can now get properly exported / imported along with all content elements inside them (Sponsored by bluemars.net)
-	* Changed extension version to 1.1.0 and uploaded new version to TER
 
 2010-05-10 Bernhard Kraft  <kraftb@think-open.at>
 
