@@ -3,6 +3,7 @@
 	* Fixed styles issues with 4.4 branch
 	* Fixed issues when moving content elements
 	* Fixed issues when creating new content elements in branches < 4.3
+	* Major rewrite of the tcemain hook class and copy/cut & paste handling
 
 2010-06-29 Bernhard Kraft  <kraftb@think-open.at>
 

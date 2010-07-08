@@ -182,8 +182,8 @@ will have to get changed
 					if ($table == 'tt_content') {
 						// Single elements get localized.
 						// Take care that elements contained inside kb_nescefe elements get localized as well.
-echo "DEBUG<br />\nLocalize not implemented currently!<br />\nLocalize : $value";
-exit();
+//echo "DEBUG<br />\nLocalize not implemented currently!<br />\nLocalize : $value";
+// exit();
 						$this->remapNescefeContents(true, $value);
 					}
 				break;
@@ -315,8 +315,8 @@ exit();
 				// which should be the case if a whole page was copied
 			if (!$this->parentObject->copyMappingArray['tt_content'][$containedUid] && $copyMissingContents) {
 					// If the cointained record did not get copied - which is the case when the user copied a single record
-					// then now create a copy of the contents of the original container
-				$this->copyMissingRecords($containedUid, $newRec);
+					// then now create a copy of the contents of the original container (or a localization if $language is passed)
+				$this->copyMissingRecords($containedUid, $newRec, $language);
 			}
 			if ($copiedContentUid = $this->parentObject->copyMappingArray['tt_content'][$containedUid]) {
 					// Fetch the copied record and update the parentPosition field to point to its new parent
