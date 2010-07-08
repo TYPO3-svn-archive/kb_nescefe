@@ -313,7 +313,7 @@ will have to get changed
 			$containedUid = $containedRecord['uid'];
 				// Check if the UID of those contained records can be found in the copyMappingArray
 				// which should be the case if a whole page was copied
-			if (!$this->parentObject->copyMappingArray['tt_content'][$containedUid] && $copyMissingContents) {
+			if (!$this->parentObject->copyMappingArray['tt_content'][$containedUid] && $copyMissingContents && $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['copyRecursive']) {
 					// If the cointained record did not get copied - which is the case when the user copied a single record
 					// then now create a copy of the contents of the original container (or a localization if $language is passed)
 				$this->copyMissingRecords($containedUid, $newRec, $language);
