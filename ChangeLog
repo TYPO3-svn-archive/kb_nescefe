@@ -1,3 +1,9 @@
+2010-07-08 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Fixed styles issues with 4.4 branch
+	* Fixed issues when moving content elements
+	* Fixed issues when creating new content elements in branches < 4.3
+
 2010-06-29 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Making an Import/Export of kb_nescefe elements or pages with such elements now works properly

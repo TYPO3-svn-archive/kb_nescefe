@@ -45,15 +45,20 @@ class ux_t3lib_clipboard extends t3lib_clipboard {
 	 * @param	boolean		If set, then the redirect URL will point back to the current script, but with CB reset.
 	 * @return	string
 	 */
+		// KB_NESCEFE CHANGES ----- BEGIN
 	function pasteUrl($table,$uid,$setRedirect=1,$colPos = 0, $sys_language_uid = 0, $parentPosition = '') {
+		// KB_NESCEFE CHANGES -----END 
 		$rU = $this->backPath.($table=='_FILE'?'tce_file.php':'tce_db.php').'?'.
 			($setRedirect ? 'redirect='.rawurlencode(t3lib_div::linkThisScript(array('CB'=>''))) : '').
 			'&vC='.$GLOBALS['BE_USER']->veriCode().
 			'&prErr=1&uPT=1'.
-			'&CB[paste]='.(($table=='tt_content')?rawurlencode($table.'|'.$uid.'|'.$colPos.'|'.$sys_language_uid.'|'.$parentPosition):rawurlencode($table.'|'.$uid)).
+				// KB_NESCEFE CHANGES ----- BEGIN
+			'&CB[paste]='.(($table=='tt_content')?rawurlencode($table.'|'.$uid.($uid>=0?('|'.$colPos.'|'.$sys_language_uid.'|'.$parentPosition):'')):rawurlencode($table.'|'.$uid)).
+				// KB_NESCEFE CHANGES ----- END
 			'&CB[pad]='.$this->current;
 		return $rU;
 	}
+
 
 	/**
 	 * Applies the proper paste configuration in the $cmd array send to tce_db.php.
@@ -72,103 +77,31 @@ class ux_t3lib_clipboard extends t3lib_clipboard {
 	 * @param	array		Command-array
 	 * @return	array		Modified Command-array
 	 */
-	function makePasteCmdArray($ref,$CMD) {
+	function makePasteCmdArray($ref,$CMD)	{
 		list($pTable, $pUid, $pColPos, $sys_language_uid_str, $parentPosition) = explode('|', $ref);
 		$sys_language_uid = intval($sys_language_uid_str);
 		$pUid = intval($pUid);
 
-		if ($pTable || ($pUid>=0)) {	// pUid must be set and if pTable is not set (that means paste ALL elements) the uid MUST be positive/zero (pointing to page id)
+		if ($pTable || $pUid>=0)	{	// pUid must be set and if pTable is not set (that means paste ALL elements) the uid MUST be positive/zero (pointing to page id)
 			$elements = $this->elFromTable($pTable);
 
 			$elements = array_reverse($elements);	// So the order is preserved.
-			$mode = ($this->currentMode()=='copy') ? 'copy' : 'move';
+			$mode = $this->currentMode()=='copy' ? 'copy' : 'move';
 
 				// Traverse elements and make CMD array
-			reset($elements);
-			while (list($tP) = each($elements)) {
-				list($table, $uid) = explode('|', $tP);
-				if (!is_array($CMD[$table])) {
-					$CMD[$table]=array();
-				}
-				$CMD[$table][$uid][$mode] = $pUid;
-				if ($mode=='move') {
-					$this->removeElement($tP);
-				}
-				if ($pUid>0) {
-						// Move onto a page. Fix colPos ans sys_language_uid
-					if (($mode=='copy') && ($table=='tt_content')) {
-						$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-						$tce->start(Array(), $CMD);
-						if (strlen($sys_language_uid_str)) {
-							$tce->setChildsToLang = $sys_language_uid;
-						}
-						$tce->process_cmdmap();
-						$CMD = '';
-						$dataArray = Array();
-						$newUid = $tce->copyMappingArray[$table][$uid];
-						if (strlen($pColPos)) {
-							$dataArray['tt_content'][$newUid]['colPos'] = $pColPos;
-						}
-						if (strlen($sys_language_uid_str)) {
-							$dataArray['tt_content'][$newUid]['sys_language_uid'] = $sys_language_uid;
-						}
-						$dataArray['tt_content'][$newUid]['parentPosition'] = $parentPosition;
-						$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-						$tce->start($dataArray, Array());
-						$tce->process_datamap();
-						$sortInfo = $tce->getSortNumber('tt_content', $newUid, $pUid);
-						if ($sortInfo !== false) {
-							$sortRow = $GLOBALS['TCA']['tt_content']['ctrl']['sortby'];
-							$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', 'uid='.$newUid, array($sortRow => $sortInfo));
-						}
-					} elseif ($table=='tt_content') {
-						$dataArray = Array();
-						if (strlen($pColPos)) {
-							$dataArray['tt_content'][$uid]['colPos'] = $pColPos;
-						}
-						if (strlen($sys_language_uid_str)) {
-							$dataArray['tt_content'][$uid]['sys_language_uid'] = $sys_language_uid;
-						}
-						$dataArray['tt_content'][$uid]['pid'] = $pUid;
-						$dataArray['tt_content'][$uid]['parentPosition'] = $parentPosition;
-						$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-						$tce->start($dataArray, Array());
-						$tce->process_datamap();
-
-						$sortInfo = $tce->getSortNumber('tt_content', $uid, $pUid);
-						if ($sortInfo !== false) {
-							$sortRow = $GLOBALS['TCA']['tt_content']['ctrl']['sortby'];
-							$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', 'uid='.$uid, array($sortRow => $sortInfo));
-						}
-						unset($CMD[$table][$uid][$mode]);
-					}
-				} else {
-					if ($table=='tt_content') {
-						$tRec = t3lib_BEfunc::getRecord('tt_content', abs($pUid));
-						$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-						$tce->start(Array(), $CMD);
-						$tce->setChildsToLang = $tRec['sys_language_uid'];
-						$tce->process_cmdmap();
-						$CMD = '';
-						if ($mode == 'copy') {
-							
-						} else {
-								// Moving after another record. Still have to set colPos and parentPosition correctly
-							$dataArray = Array();
-							$dataArray['tt_content'][$uid]['colPos'] = $tRec['colPos'];
-							$dataArray['tt_content'][$uid]['parentPosition'] = $tRec['parentPosition'];
-							$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-							$tce->start($dataArray, Array());
-							$tce->process_datamap();
-						}
-					}
-				}
+			foreach ($elements as $tP => $value) {
+				list($table,$uid) = explode('|',$tP);
+				if (!is_array($CMD[$table]))	$CMD[$table]=array();
+					// KB_NESCEFE CHANGES ----- BEGIN
+					// Now keep the clipboard fix small and move all handling to t3lib_tcemain
+				$CMD[$table][$uid][$mode]=$pUid.($pUid<0?'':(','.$pColPos.','.$sys_language_uid.','.$parentPosition));
+					// KB_NESCEFE CHANGES ----- END 
+				if ($mode=='move')	$this->removeElement($tP);
 			}
 			$this->endClipboard();
 		}
 		return $CMD;
 	}
-
 }
 
 

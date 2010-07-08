@@ -48,6 +48,7 @@ class tx_kbnescefe_itemproc {
 		list($pUid, $pos) = explode('_', $conf['row']['parentPosition'], 2);
 		$pUid = intval($pUid);
 		if (!$conf['row']['parentPosition']) {
+			$conf['items'][] = array($LANG->sL('LLL:EXT:kb_nescefe/locallang.php:no_container'), '');
 			return $conf['items'];
 		}
 		if ($pUid&&strcmp($pos, ''))	{
@@ -72,6 +73,7 @@ class tx_kbnescefe_itemproc {
 					$this->func->init($conf['row']['pid'], $pUid, $conf['row']['sys_language_uid'], $container, $tsConfig, $this->cObj);
 					$this->previewObj->func = &$this->func;
 					$file = t3lib_div::getFileAbsFileName($container['betemplate']);
+					$conf['items'][] = array($LANG->sL('LLL:EXT:kb_nescefe/locallang.php:no_container'), '');
 					if (@is_file($file))	{
 						$template = t3lib_div::getURL($file);
 						$contentAreas = $this->func->getContentAreas($template);

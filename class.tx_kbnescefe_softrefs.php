@@ -34,6 +34,9 @@
  */
 
 
+
+require_once(PATH_t3lib.'class.t3lib_softrefproc.php');
+
 class tx_kbnescefe_softrefs extends t3lib_softrefproc {
 
 		// Internal:

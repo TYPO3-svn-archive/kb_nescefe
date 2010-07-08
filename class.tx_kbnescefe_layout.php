@@ -59,7 +59,7 @@ class tx_kbnescefe_layout {
 		$pasteLink = $this->getPasteLink($params['row']);
 		$copyLink = $this->getCopyCutLink($params['row'], 'copy');
 		$cutLink = $this->getCopyCutLink($params['row'], 'cut');
-		$this->insertIntoArray($params['content'], array('edit', 'control_top'), 'pasteLink', $pasteLink);
+		$this->insertIntoArray($params['content'], array('edit', 'control_top'), array(), 'pasteLink', $pasteLink);
 		$this->insertIntoArray($params['content'], array('move_wrap_begin', 'move_down', 'move_up', 'new', 'edit', 'control_top'), array('move_wrap_begin'), 'cutLink', $cutLink);
 		$this->insertIntoArray($params['content'], array('move_wrap_begin', 'move_down', 'move_up', 'new', 'edit', 'control_top'), array('move_wrap_begin'), 'copyLink', $copyLink);
 	}
@@ -97,20 +97,59 @@ class tx_kbnescefe_layout {
 		}
 	}
 
-	function getPasteLink($row, $colPos = 0, $sys_language_uid = 0, $parentPosition = '', $header = false)	{
+	function getPasteLink($row, $colPos = 0, $sys_language_uid = 0, $parentPosition = '', $header = false) {
 		global $LANG;
 		if (!($this->clipObj && method_exists($this->clipObj, 'elFromTable'))) {
 			$this->initClipboard();
 		}
 		$elFromTable = $this->clipObj->elFromTable('tt_content');
-		if (count($elFromTable))	{
-			if (t3lib_div::compat_version('4.4')) {
-				return '<a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,'after', $elFromTable)).'" title="' . $LANG->sL('LLL:EXT:lang/locallang_mod_web_list.xml:clip_paste'.($header?'Into':'After'), TRUE) . '">' . t3lib_iconWorks::getSpriteIcon('actions-document-paste-'.($header?'into':'after')) . '</a>';
-			} else {
-				return '&nbsp; <a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,$header?'into':'after', $elFromTable)).'"><img'.t3lib_iconWorks::skinImg($this->parentObject->backPath,'gfx/clip_paste'.($header?'into':'after').'.gif','width="12" height="12"').' title="'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_web_list.php:clip_paste'.($header?'Into':'After'), TRUE).'" alt="" /></a> &nbsp;';
+		if (count($elFromTable)) {
+			$recursiveNestingDetected = false;
+			$moveAfterSelf = false;
+			$parentContainer = false;
+			if ($parentPosition || $row['parentPosition']) {
+				list($parentContainer) = explode('__', $parentPosition?$parentPosition:$row['parentPosition']);
+			}
+			foreach ($elFromTable as $element => $type) {
+				list($elementTable, $elementUid) = explode('|', $element);
+				$elementUid = intval($elementUid);
+				if ($elementUid == $row['uid']) {
+					if ($type == '1o') {
+						$moveAfterSelf = true;
+						break;
+					}
+				}
+				if ($parentContainer) {
+					$recursiveNestingDetected |= $this->findRecursiveNesting($parentContainer, $elementUid);
+					if ($recursiveNestingDetected) {
+						break;
+					}
+				}
+			}
+			if (!($recursiveNestingDetected || $moveAfterSelf)) {
+				if (t3lib_div::compat_version('4.4')) {
+					return '<a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,'after', $elFromTable)).'" title="' . $LANG->sL('LLL:EXT:lang/locallang_mod_web_list.xml:clip_paste'.($header?'Into':'After'), TRUE) . '">' . t3lib_iconWorks::getSpriteIcon('actions-document-paste-'.($header?'into':'after')) . '</a>';
+				} else {
+					return '&nbsp; <a href="'.htmlspecialchars($this->clipObj->pasteUrl('tt_content',$row['uid']?-$row['uid']:$this->parentObject->id, 1, $colPos, $sys_language_uid, $parentPosition)).'" onclick="'.htmlspecialchars('return '.$this->clipObj->confirmMsg('tt_content',$row,$header?'into':'after', $elFromTable)).'"><img'.t3lib_iconWorks::skinImg($this->parentObject->backPath,'gfx/clip_paste'.($header?'into':'after').'.gif','width="12" height="12"').' title="'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_web_list.php:clip_paste'.($header?'Into':'After'), TRUE).'" alt="" /></a> &nbsp;';
+				}
 			}
 		}
 		return '';
+	}
+
+	function findRecursiveNesting($containerUid, $elementUid) {
+		$containerUid = intval($containerUid);
+		if ($containerUid) {
+			if ($containerUid == $elementUid) {
+				return true;
+			}
+			$containerRec = t3lib_BEfunc::getRecord('tt_content', $containerUid);
+			if ($containerRec['parentPosition']) {
+				list($parentContainer) = explode('__', $containerRec['parentPosition']);
+				return $this->findRecursiveNesting($parentContainer, $elementUid);
+			}
+		}
+		return false;
 	}
 	
 	function getCopyCutLink($row, $mode)	{

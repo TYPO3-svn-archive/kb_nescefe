@@ -67,6 +67,15 @@ class tx_kbnescefe_contentPreview	{
 				$this->cObj = t3lib_div::makeInstance('tslib_cObj');
 				$this->pObj = &$pObj;
 
+				if (!$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe']) {
+					$styleFile = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['beStyles'];
+					$styleFile = t3lib_div::getFileAbsFileName($styleFile);
+					if (file_exists($styleFile)) {
+						$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe'] = t3lib_div::getURL($styleFile);
+					}
+				}
+				
+
 				$langField = $GLOBALS['TCA'][$table]['ctrl']['languageField'];
 				if ($langField) {
 					$this->lP = $row[$langField];

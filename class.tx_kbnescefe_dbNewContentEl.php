@@ -95,7 +95,17 @@ class tx_kbnescefe_dbNewContentEl {
 			$onClickEvent='';
 		}
 
-		$pObj->onClickEvent = $onClickEvent;
+			// Before versions 4.3 the "onClickEvent" was not a class variable but got directly set
+			// in the parentObjects "doc" template object in member variable "JScode".
+		if (t3lib_div::compat_version('4.3')) {
+			$pObj->onClickEvent = $onClickEvent;
+		} else {
+			$pObj->doc->JScode = $pObj->doc->wrapScriptTags('
+                                function goToalt_doc()  {       //
+                                        '.$onClickEvent.'
+                                }
+			');
+		}
 
 
 			// Warning - Easter egg! --- begin

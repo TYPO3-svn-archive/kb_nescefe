@@ -11,4 +11,7 @@ templateSoftReference = 0
 	# cat=basic; type=int+; label=Container Element colPos: This option allows you to set to which value the colPos field will get set for elements inside a container. Usually 10 is a good choice. It should usually not be visible in the normal page module except for debugging purposes.
 containerElementColPos = 10
 
+	# cat=basic; type=string; label=Extra CSS: This is the path to a file which will get included as CSS. The predefined value "EXT:kb_nescefe/res/be_styles_44.css" fixes some CSS issues with the new TYPO3 branch 4.4.
+beStyles = EXT:kb_nescefe/res/be_styles_44.css
+
 
