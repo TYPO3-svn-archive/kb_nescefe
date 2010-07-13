@@ -26,6 +26,7 @@
 ***************************************************************/
 /**
  * Item processing class
+ * TODO: This code is probably outdated. AFAIK parentPosition pointers can not have "*" in them.
  *
  * @author	Bernhard Kraft <kraftb@think-open.at>
  */

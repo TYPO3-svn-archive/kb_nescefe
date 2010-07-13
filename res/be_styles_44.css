@@ -1,9 +1,41 @@
 
+/*******************************************************
+ * some fixes for standard Page Module of TYPO3 4.4
+ ******************************************************/
+
 td.t3-page-column {
 	max-width: 100%;
 }
 
 .t3-page-ce .t3-row-header {
-	min-width: 105px;
+	min-width: 145px;
+}
+
+
+/* configuration of span text in hidden area/active */
+.t3-page-ce-hidden span {
+	color: #CACACA
+}
+.t3-page-ce.active span {
+	color: #000
+}
+
+
+/* configuration of main table */
+div.t3-page-ce table.nescefe-table {
+	border: none;
+}
+
+
+/* configuration of table td */
+.t3-page-ce table.nescefe-table td {
+	border: 1px solid #cacaca;
+}
+.t3-page-ce.active table.nescefe-table td {
+	border: 1px solid #cacaca;
+}
+
+.t3-page-ce-hidden table.nescefe-table td {
+	border: 1px dotted #cacaca;
 }
 

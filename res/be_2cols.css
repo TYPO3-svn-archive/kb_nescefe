@@ -1,0 +1,15 @@
+
+table.nescefe-2cols {
+	padding: 0px;
+	margin: 0px;
+	border: 1px dotted #333333;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table.nescefe-2cols td {
+	border: 1px dotted #333333;
+	padding: 5px;
+	vertical-align: top;
+}
+

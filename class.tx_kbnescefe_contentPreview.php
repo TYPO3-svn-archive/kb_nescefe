@@ -43,11 +43,26 @@ class tx_kbnescefe_contentPreview	{
 	var $sectionElementMaxIdx = array();
 	var $containerElementColPos = 0;
 
+
+	/*
+	 * Constructor: Initializes this content preview instance
+	 *
+	 * @return void
+	 */
 	function tx_kbnescefe_contentPreview() {
 		$this->containerElementColPos = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['containerElementColPos'];
 	}
 
 
+	/*
+	 * Renders the content preview for a kb_nescefe plugin: It will show the columns of the container and its contents
+	 * This is the hook method called from within the page module (tx_cms_layout)
+	 *
+	 * @param array Contains some parameters passed to this method by the page module
+	 * @param tx_cms_layout The parent class from which this hook is called
+	 * @return string The rendered preview content
+	 * @see: EXT:cms/layout/class.tx_cms_layout.php:tx_cms_layout->tt_content_drawItem (search for "list_type_Info" / hook)
+	 */
 	function renderPluginPreview($params, &$parentObject)	{
 		if (get_class($parentObject) === 'tx_templavoila_module1') {
 			return 'The extension "kb_nescefe" is not compatible with TemplaVoila. Use TemplaVoila Flexible Content Elements instead.';
@@ -60,21 +75,23 @@ class tx_kbnescefe_contentPreview	{
 		return $this->renderPreview($parentObject->table, $params['row'], 0, $lP, $parentObject);
 	}
 
+
+	/*
+	 * Does the real rendering of the plugin content (container and contents)
+	 *
+	 * @param string The table for which the preview should get rendered (should usually always be "tt_content")
+	 * @param array The database row of the plugin/container record (tt_content row) being rendered
+	 * @param boolean Not used here
+	 * @param integer The language for which to render the output - this determines which container content will get fetched
+	 * @param tx_cms_layout A pointer to the parent object instance (page module)
+	 * @return string The rendered content
+	 */
 	function renderPreview($table, $row, $isRTE, $lP, &$pObj)	{
 		global $LANG;
 		if (($row['CType']=='kb_nescefe_pi1') || (($row['CType'] == 'list') && ($row['list_type'] == 'kb_nescefe_pi1'))) {
 			if ($row['container'])	{
 				$this->cObj = t3lib_div::makeInstance('tslib_cObj');
 				$this->pObj = &$pObj;
-
-				if (!$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe']) {
-					$styleFile = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['beStyles'];
-					$styleFile = t3lib_div::getFileAbsFileName($styleFile);
-					if (file_exists($styleFile)) {
-						$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe'] = t3lib_div::getURL($styleFile);
-					}
-				}
-				
 
 				$langField = $GLOBALS['TCA'][$table]['ctrl']['languageField'];
 				if ($langField) {
@@ -97,6 +114,7 @@ class tx_kbnescefe_contentPreview	{
 					$file = t3lib_div::getFileAbsFileName($this->container['betemplate']);
 					if (@is_file($file))	{
 						$template = t3lib_div::getURL($file);
+						$template = $this->processTemplate($template);
 						$contentAreas = $this->func->getContentAreas($template);
 						$contentElements = $this->getContentElements($contentAreas);
 						$this->func->getContentElementPaths($contentAreas);
@@ -114,7 +132,54 @@ class tx_kbnescefe_contentPreview	{
 		}
 	}
 
+	/*
+	 * Processes the BE template: Checks if there are command statements at the top of the file, performs the requested actions and removes them before returning
+	 *
+	 * @param string The template as read from file
+	 * @return string The template with command statements in the header removed
+	 */
+	function processTemplate($template) {
+		$lines = explode(chr(10), $template);
+		do {
+			$line = array_shift($lines);
+			$processedCommand = $this->processCommand($line);
+			if (!$processedCommand) {
+				array_unshift($lines, $line);
+			}
+		} while ($processedCommand);
+		return implode(chr(10), $lines);
+	}
 
+	/*
+	 * Processes template commands
+	 *
+	 * @param string One of the first lines of a template file (which can contain commands)
+	 * @return boolean True when a command was found and processed
+	 */
+	function processCommand($line) {
+		list($command, $params) = explode('=', $line, 2);
+		switch (trim($command)) {
+			case 'INCLUDE_STYLE':
+				$params = trim($params);
+				$file = t3lib_div::getFileAbsFileName($params);
+				if (is_file($file) && is_readable($file)) {
+					$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe_'.md5($params)] = t3lib_div::getURL($file);
+				}
+				return true;
+			break;
+			default:
+				return false;
+			break;
+		}
+		return false;
+	}
+
+	/*
+	 * Retrieves the content elements inside the currently rendered container
+	 *
+	 * @param array The content areas of the current container
+	 * @return array All content elements found for the currently rendered container
+	 */
 	function getContentElements($contentAreas)	{
 		$cpospart = '';
 		$showHidden = $this->pObj->tt_contentConfig['showHidden']?'':t3lib_BEfunc::BEenableFields('tt_content');
@@ -131,12 +196,28 @@ class tx_kbnescefe_contentPreview	{
 		return $storage;
 	}
 	
+	/*
+	 * Returns the number of sections/content areas for the currently rendered container
+	 *
+	 * @param array All content elements of the current container
+	 * @param string The key for the current content area
+	 * @param object A pointer to the object instance from which this callback function is called (usually a instance of "tx_kbnescefe_func")
+	 * @return string The number of the last repeatable section for the current content area
+	 */
 	function func_SECTIONCOUNT($contentElements, $nkey, &$callObj)	{
 		$code = intval($this->func->sectionElementMaxIdx[$nkey])+1;
 		return $code;
 	}
 
 
+	/*
+	 * Shows a button/link for creating a new section
+	 *
+	 * @param array All content elements of the current container
+	 * @param string The key for the current content area
+	 * @param object A pointer to the object instance from which this callback function is called (usually a instance of "tx_kbnescefe_func")
+	 * @return string An interface element (<input type="button" .../>) for creating a new section
+	 */
 	function func_NEWSECTION($contentElements, $nkey, &$callObj)	{
 		global $LANG;
 		if (!$this->sectionIdxArr[$nkey])	{
@@ -146,6 +227,14 @@ class tx_kbnescefe_contentPreview	{
 		return $code;
 	}
 
+	/*
+	 * Renders the content elements inside a kb_nescefe container column / content area
+	 *
+	 * @param array All content elements of the current container
+	 * @param string The key for the current content area
+	 * @param object A pointer to the object instance from which this callback function is called (usually a instance of "tx_kbnescefe_func")
+	 * @return string The rendered content elements
+	 */
 	function func_CONTENT($contentElements, $nkey, &$callObj)	{
 		$code = '';
 		if (is_array($contentElements[$this->id.'__'.$nkey]))	{
@@ -185,6 +274,14 @@ class tx_kbnescefe_contentPreview	{
 	}
 
 
+	/*
+	 * Renders the header for a kb_nescefe content column
+	 *
+	 * @param array All content elements of the current container
+	 * @param string The key for the current content area
+	 * @param object A pointer to the object instance from which this callback function is called (usually a instance of "tx_kbnescefe_func")
+	 * @return string The rendered column header
+	 */
 	function func_HEADER($contentElements, $nkey, &$callObj) {
 		global $LANG;
 		$code = '';
@@ -207,12 +304,13 @@ class tx_kbnescefe_contentPreview	{
 
 	/**
 	 * Creates onclick-attribute content for a new content element
-	 * Copy from: typo3/sysext/cms/layout/class.tx_cms_layout.php
+	 * Modified copy from: typo3/sysext/cms/layout/class.tx_cms_layout.php
 	 *
-	 * @param	integer		Page id where to create the element.
-	 * @param	integer		Preset: Column position value
-	 * @param	integer		Preset: Sys langauge value
-	 * @return	string		String for onclick attribute.
+	 * @param integer Page id where to create the element.
+	 * @param integer Preset: Column position value
+	 * @param integer Preset: Sys langauge value
+	 * @param string The position in the parent container element
+	 * @return string String for onclick attribute.
 	 * @see getTable_tt_content()
 	 */
 	function newContentElementOnClick($id,$colPos,$sys_language,$parentPosition) {

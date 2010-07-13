@@ -37,6 +37,15 @@
 class tx_kbnescefe_dbNewContentEl {
 	var $wizardItem = array();
 
+	/**
+	 * Easteregg-Method: This method determines the date of the easter sunday for the passed year.
+	 * The icon of a kb_nescefe container will be different in the easter week (from 1 week before easter sunday till easter monday)
+	 *
+	 * Just change the date on your dev-server to try this easter egg out ;)
+	 *
+	 * @param integer The year for which to determine easter sunday
+	 * @return integer The timestamp of easter sunday for the passed year
+	 */
 	function easter_sunday($year) {
 		$J = date ("Y", mktime(0, 0, 0, 1, 1, $year));
 		$a = $J % 19;
@@ -62,6 +71,12 @@ class tx_kbnescefe_dbNewContentEl {
 		return $easter;
 	} 
 
+	/**
+	 * Hook method for modifying the wizardItems of the "New content element wizard". Will add the kb_nescefe container to the common elements
+	 *
+	 * @param array The currently available elements of the "New content element wizard"
+	 * @return array The modified array with the kb_nescefe container element added
+	 */
 	function proc($wizardItems) {
 		global $BACK_PATH;
 		$this->wizardItem = array(
@@ -150,14 +165,15 @@ class tx_kbnescefe_dbNewContentEl {
 
 	/**
 	 * Create on-click event value.
-	 * Copied from: typo3/sysext/cms/layout/db_new_content_el.php
+	 * Modified copy from: typo3/sysext/cms/layout/db_new_content_el.php
 	 *
-	 * @param	array		The record.
-	 * @param	string		Column position value.
-	 * @param	integer		Move uid
-	 * @param	integer		PID value.
-	 * @param	integer		System language
-	 * @return	string
+	 * @param array The record.
+	 * @param string Column position value.
+	 * @param integer Move uid
+	 * @param integer PID value.
+	 * @param integer System language
+	 * @param string The position in the parent container
+	 * @return string A Javascript code for creating a new record (for "onclick" event)
 	 */
 	function onClickInsertRecord($row, $vv, $moveUid, $pid, $sys_lang=0, $parentPosition='') {
 		global $BACK_PATH;
@@ -168,11 +184,10 @@ class tx_kbnescefe_dbNewContentEl {
 		return 'window.location.href=\''.$location.'\'+document.editForm.defValues.value; return false;';
 	}
 
-
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['kb_nescefe/class.tx_kbnescefe_dbNewContentEl.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['kb_nescefe/class.tx_kbnescefe_dbNewContentEl.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['kb_nescefe/class.tx_kbnescefe_dbNewContentEl.php']);
 }
 

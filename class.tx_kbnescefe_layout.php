@@ -40,6 +40,21 @@ require_once(t3lib_extMgm::extPath('kb_nescefe').'class.tx_kbnescefe_func.php');
 class tx_kbnescefe_layout {
 
 
+	/*
+	 * Constructor: This takes care of stuff required when kb_nescefe is active in the page module
+	 *
+	 */
+	function tx_kbnescefe_layout() {
+		if (!$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe']) {
+			$styleFile = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['beStyles'];
+			$styleFile = t3lib_div::getFileAbsFileName($styleFile);
+			if (file_exists($styleFile)) {
+				$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe'] = t3lib_div::getURL($styleFile);
+			}
+		}
+	}
+
+
 	function initClipboard() {
 		$this->clipObj = t3lib_div::makeInstance('t3lib_clipboard');		// Start clipboard
 		$this->clipObj->backPath = $GLOBALS['BACK_PATH'];

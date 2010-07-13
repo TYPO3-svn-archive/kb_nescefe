@@ -1,0 +1,15 @@
+
+table.nescefe-horiz-cols {
+	padding: 0px;
+	margin: 0px;
+	border: 1px dotted #333333;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table.nescefe-horiz-cols td {
+	border: 1px dotted #333333;
+	padding: 5px;
+	vertical-align: top;
+}
+
