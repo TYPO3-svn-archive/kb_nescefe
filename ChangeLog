@@ -1,3 +1,9 @@
+2010-07-23 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Changed a "width" style for special 4.4.x CSS
+	* Uploaded Extensio to TER as 1.1.0
+	* Updated documentation
+
 2010-07-08 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Fixed styles issues with 4.4 branch
