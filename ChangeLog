@@ -1,3 +1,10 @@
+2010-08-06 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Fixed a bug regarding "array_slice" which seems to occur only with some PHP version (thanks to Harald Witt for reporting this bug)
+	* Created doxygen documenation for "class.tx_kbnescefe_layout.php"
+	* Set "public" and "protected" keywords for methods in "class.tx_kbnescefe_layout.php"
+	* Fixed the labels and confirm messages for pasting a content element into content columns or container columns
+
 2010-07-23 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Changed a "width" style for special 4.4.x CSS
