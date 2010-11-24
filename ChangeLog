@@ -1,3 +1,7 @@
+2010-11-24 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Fixed bug #11052: Incompatibility with TYPO3 4.5
+
 2010-08-06 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Fixed a bug regarding "array_slice" which seems to occur only with some PHP version (thanks to Harald Witt for reporting this bug)

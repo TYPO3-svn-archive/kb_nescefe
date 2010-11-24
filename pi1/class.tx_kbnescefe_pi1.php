@@ -92,7 +92,7 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 		$id = $this->cObj->data['uid'];
 		$code = '';
 		if (is_array($contentElements[$id.'__'.$nkey])) {
-			$localCObj = clone($this->cObj);
+			$localCObj = t3lib_div::makeInstance('tslib_cObj');
 
 			$parts = explode('_', $nkey);
 			$c = 0;
