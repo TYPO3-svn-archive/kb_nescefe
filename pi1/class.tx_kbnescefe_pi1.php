@@ -48,6 +48,7 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
+		$this->disableElementContentOL = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['disableElementContentOL'];
 
 		$this->container = $GLOBALS['TSFE']->sys_page->getRawRecord('tx_kbnescefe_containers', $this->cObj->data['container']);
 		if (is_array($this->container)) {
@@ -69,19 +70,30 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 	}
 
 	function getContentElements() {
-		$showLanguage = ($GLOBALS['TSFE']->sys_language_content==0) ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_content;
+			// Determine which language to retrieve
+		if ($GLOBALS['TSFE']->sys_language_contentOL && !$this->disableElementContentOL) {
+			$sys_language_content = '0,-1';
+		} else {
+			$sys_language_content = intval($GLOBALS['TSFE']->sys_language_content);
+		}
+		$showLanguage = ' AND sys_language_uid IN (' . $sys_language_content . ')';
+			// Build up query and retrieve elements
 		$ef = $GLOBALS['TSFE']->sys_page->enableFields('tt_content');
 		$pid = $this->cObj->data['pid'];
-		$rows = $GLOBALS['TSFE']->sys_page->getRecordsByField('tt_content', 'pid', $pid, ' AND parentPosition LIKE \''.$this->cObj->data['uid'].'\_\_%\''.$ef, '', 'sorting');
+		$useUid = $this->cObj->data['uid'];
+		if ($GLOBALS['TSFE']->sys_language_contentOL && $this->disableElementContentOL) {
+			$useUid = $this->cObj->data['_LOCALIZED_UID'];
+		}
+		$rows = $GLOBALS['TSFE']->sys_page->getRecordsByField('tt_content', 'pid', $pid, $showLanguage . ' AND parentPosition LIKE \''.$useUid.'\_\_%\''.$ef, '', 'sorting');
 		$storage = array();
 		if (is_array($rows)) {
 			foreach ($rows as $row) {
-				$OLrow = $GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
-				if ($OLrow) {
-					$storage[$row['parentPosition']][] = $OLrow;
+				if ($GLOBALS['TSFE']->sys_language_contentOL) {
+					$OLrow = $GLOBALS['TSFE']->sys_page->getRecordOverlay('tt_content', $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
 				} else {
-					$storage[$row['parentPosition']][] = $row;
+					$OLrow = $GLOBALS['TSFE']->sys_page->versionOL('tt_content', $row);
 				}
+				$storage[$row['parentPosition']][] = $OLrow;
 			}
 		}
 		$this->func->getSectionMax($storage);
@@ -89,7 +101,11 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 	}
 
 	function func_CONTENT($contentElements, $nkey, &$callObj) {
-		$id = $this->cObj->data['uid'];
+		if ($GLOBALS['TSFE']->sys_language_contentOL && $this->disableElementContentOL) {
+			$id = $this->cObj->data['_LOCALIZED_UID'];
+		} else {
+			$id = $this->cObj->data['uid'];
+		}
 		$code = '';
 		if (is_array($contentElements[$id.'__'.$nkey])) {
 			$localCObj = t3lib_div::makeInstance('tslib_cObj');

@@ -12,6 +12,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['copyRecursive'] = intval($_EXT
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['templatesOnPages'] = intval($_EXTCONF['templatesOnPages']) ? true : false;
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['templateSoftReference'] = intval($_EXTCONF['templateSoftReference']) ? true : false;
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['containerElementColPos'] = intval($_EXTCONF['containerElementColPos']) ? intval($_EXTCONF['containerElementColPos']) : 10;
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['disableElementContentOL'] = intval($_EXTCONF['disableElementContentOL']) ? true : false;
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['beStyles'] = trim($_EXTCONF['beStyles']);
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$_EXTKEY.'_pi1'][] = 'EXT:kb_nescefe/class.tx_kbnescefe_contentPreview.php:tx_kbnescefe_contentPreview->renderPluginPreview';
