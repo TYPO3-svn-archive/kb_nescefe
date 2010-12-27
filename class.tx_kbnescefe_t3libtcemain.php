@@ -60,7 +60,7 @@ which will get copied in the hierarchy of copying the nescefe container will be 
 But the content elements simply copied via the clipboard will then point to a wrong container.
 
 Hmm. Probably all copying of contained elements should get done from within the processCmdmap method.
-UPDATE: Of course this should be. As the interface for making a copy/localize is the process_cmdma
+UPDATE: Of course this should be. As the interface for making a copy/localize is the process_cmdmap
 method. So this method should get used for taking care of all copy-handling stuff.
 
 There are two things which can get copied:
@@ -104,10 +104,22 @@ will have to get changed
 						list($destPid, $colPos, $language, $parentPosition) = explode(',', $value);
 						$value = $destPid;
 						$parentObject->moveInfo[$table][$id] = array(
-							'colPos' => $colPos,
-							'sys_language_uid' => $language,
 							'parentPosition' => $parentPosition,
 						);
+							// Fix for #10202: Pasting records the language, colPos and order get lost
+						if (strlen($colPos)) {
+							$parentObject->moveInfo[$table][$id]['colPos'] = $colPos;
+							$parentObject->moveInfo[$table][$id]['sys_language_uid'] = $language;
+						}
+							// Fix for #10202: Pasting records the language, colPos and order get lost
+							// When also TemplaVoila is installed (for example if FCEs get used)
+							// Then the colPos value will get resetted to a value dictated by the Flexform.
+							// To overcome this TemplaVoila "feature" remember the current colPos and
+							// set it again in the "moveRecord_firstElementPostProcess" hook.
+						if (($table == 'tt_content') && $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['moveRecordClass']['templavoila']) {
+							$currentRecord = t3lib_BEfunc::getRecord('tt_content', $id);
+							$parentObject->moveInfo[$table][$id]['colPos'] = $currentRecord['colPos'];
+						}
 					}
 				break;
 
@@ -117,10 +129,15 @@ will have to get changed
 						list($destPid, $colPos, $language, $parentPosition) = explode(',', $value);
 						$value = $destPid;
 						$parentObject->copyInfo[$table][$id] = array(
-							'colPos' => $colPos,
-							'sys_language_uid' => $language,
 							'parentPosition' => $parentPosition,
 						);
+							// Fix for #10202: Pasting records the language, colPos and order get lost
+						if (strlen($colPos)) {
+								// When colPos is set, then a "paste into column" button has been used
+								// So set the submitted colPos and sys_language_uid values
+							$parentObject->copyInfo[$table][$id]['colPos'] = $colPos;
+							$parentObject->copyInfo[$table][$id]['sys_language_uid'] = $language;
+						}
 					}
 						// When the target value is smaller than 0 it is a target content element after which the records going to be copied will end up
 						// In this case set the copyInfo array by retrieving the settings of the record after which the current records shall get pasted
@@ -327,7 +344,9 @@ will have to get changed
 					// This is NOT a localization. Localization is handled differently - this is just a copy&paste into another language
 					// This is also not tested right now (2010-07-02)
 				if (($copyInfo = $this->parentObject->copyInfo['tt_content'][$origUid]) && !$language) {
-					$datamap['tt_content'][$copiedContentUid]['sys_language_uid'] = $copyInfo['sys_language_uid'];
+					if (isset($copyInfo['sys_language_uid'])) {
+						$datamap['tt_content'][$copiedContentUid]['sys_language_uid'] = $copyInfo['sys_language_uid'];
+					}
 				}
 			}
 		}

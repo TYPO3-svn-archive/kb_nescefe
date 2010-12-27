@@ -2,6 +2,7 @@
 
 	* Fixed bug #10277: Content elements not localized
 	* Added an option to override "sys_language_contentOL" for elements inside containers
+	* Fixed bug #10202: Pasting records the language, colPos and order get lost
 
 2010-11-24 Bernhard Kraft  <kraftb@think-open.at>
 
