@@ -100,6 +100,7 @@ class tx_kbnescefe_contentPreview	{
 					$this->lP = $lP;
 				}
 
+				$this->containerRow = $row;
 				$this->RTE = $GLOBALS['BE_USER']->isRTE();
 				$this->pageID = $row['pid'];
 				$this->tsConfig = t3lib_BEfunc::getModTSconfig($this->pageID, 'mod.tx_kbnescefe');
@@ -182,15 +183,20 @@ class tx_kbnescefe_contentPreview	{
 	 */
 	function getContentElements($contentAreas)	{
 		$cpospart = '';
-		$showHidden = $this->pObj->tt_contentConfig['showHidden']?'':t3lib_BEfunc::BEenableFields('tt_content');
-		$showLanguage = $this->pObj->defLangBinding && $this->lP==0 ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid='.$this->lP;
-		$cpospart .= ' AND parentPosition LIKE \''.$this->id.'\_\_%\'';
+		$showHidden = $this->pObj->tt_contentConfig['showHidden'] ? '' : t3lib_BEfunc::BEenableFields('tt_content');
+		$showLanguage = $this->pObj->defLangBinding && $this->lP == 0 ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid=' . $this->lP;
+		$cpospart .= ' AND ( parentPosition LIKE \'' . $this->id . '\_\_%\'';
 
-		$queryParts = $this->pObj->makeQueryArray('tt_content', $this->pageID, $cpospart.$showHidden.$showLanguage);
+		if($this->lP > 0 && intval($this->containerRow['l18n_parent']) > 0) {
+			$cpospart .= ' OR parentPosition LIKE \'' . $this->containerRow['l18n_parent'] . '\_\_%\'';
+		}
+		
+		$cpospart .= ' ) ';
+		$queryParts = $this->pObj->makeQueryArray('tt_content', $this->pageID, $cpospart . $showHidden . $showLanguage);
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECT_queryArray($queryParts);
 		$storage = array();
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))	{
-			$storage[$row['parentPosition']][] = $row;
+			$storage[str_replace($this->containerRow['l18n_parent'] . '\_\_%\'', $this->id . '\_\_%\'', $row['parentPosition'])][] = $row;
 		}
 		$this->func->getSectionMax($storage);
 		return $storage;
@@ -237,21 +243,30 @@ class tx_kbnescefe_contentPreview	{
 	 */
 	function func_CONTENT($contentElements, $nkey, &$callObj)	{
 		$code = '';
-		if (is_array($contentElements[$this->id.'__'.$nkey]))	{
-			$keys = array_keys($contentElements[$this->id.'__'.$nkey]);
+		
+		$currentElements = array();
+		if (is_array($contentElements[$this->id . '__' . $nkey])) {
+			$currentElements = $contentElements[$this->id . '__' . $nkey];
+		}
+		if(intval($this->containerRow['l18n_parent']) > 0 AND is_array($contentElements[$this->containerRow['l18n_parent'] . '__' . $nkey])) {
+			$currentElements = array_merge($currentElements, $contentElements[$this->containerRow['l18n_parent'] . '__' . $nkey]);
+			
+		}
+		if (is_array($currentElements))	{
+			$keys = array_keys($currentElements);
 			$cnt = 0;
-			foreach ($contentElements[$this->id.'__'.$nkey] as $row)	{
+			foreach ($currentElements as $row)	{
 				$row_code = '';
 				if ($cnt)		{
 					if ($cnt>1)	{
-						$this->pObj->tt_contentData['prev'][$row['uid']] = -$contentElements[$this->id.'__'.$nkey][$keys[$cnt-2]]['uid'];
+						$this->pObj->tt_contentData['prev'][$row['uid']] = -$currentElements[$keys[$cnt-2]]['uid'];
 					} else	{
 						$this->pObj->tt_contentData['prev'][$row['uid']] = $this->pageID;
 					}
 				}
-				$this->pObj->tt_contentData['next'][$row['uid']] = -$contentElements[$this->id.'__'.$nkey][$keys[$cnt+1]]['uid'];
+				$this->pObj->tt_contentData['next'][$row['uid']] = -$currentElements[$keys[$cnt+1]]['uid'];
 				for ($x = 0; $x < 1; $x++)	{
-					$this->pObj->tt_contentData['nextThree'][$row['uid']] .= $contentElements[$this->id.'__'.$nkey][$keys[$cnt+$x]]['uid']?($contentElements[$this->id.'__'.$nkey][$keys[$cnt+$x]]['uid'].','):'';
+					$this->pObj->tt_contentData['nextThree'][$row['uid']] .= $currentElements[$keys[$cnt+$x]]['uid']?($currentElements[$keys[$cnt+$x]]['uid'].','):'';
 				}
 
 				$isRTE = $this->RTE && $this->pObj->isRTEforField('tt_content', $row, 'bodytext');
