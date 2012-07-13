@@ -55,7 +55,8 @@ class ux_t3lib_clipboard extends t3lib_clipboard {
 				// KB_NESCEFE CHANGES ----- BEGIN
 			'&CB[paste]='.(($table=='tt_content')?rawurlencode($table.'|'.$uid.($uid>=0?('|'.$colPos.'|'.$sys_language_uid.'|'.$parentPosition):'')):rawurlencode($table.'|'.$uid)).
 				// KB_NESCEFE CHANGES ----- END
-			'&CB[pad]='.$this->current;
+			'&CB[pad]='.$this->current.
+			t3lib_BEfunc::getUrlToken('tceAction');
 		return $rU;
 	}
 

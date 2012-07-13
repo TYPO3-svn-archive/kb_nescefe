@@ -1,3 +1,8 @@
+2012-07-13 Bernhard Kraft  <kraftb@seicht.co.at>
+
+	* Fixed issue with clipboard XCLASS: http://www.toco3.com/de/toco3_blog/blog-post/2011/03/18/typo3-45-und-kb-nescefe-und-security-token.html
+	* Uploaded extension to TER as 1.1.2
+
 2010-12-27 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Fixed bug #10277: Content elements not localized
