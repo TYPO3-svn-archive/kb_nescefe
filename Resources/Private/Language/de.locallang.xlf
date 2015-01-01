@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2014-12-31T15:38:43Z" product-name="kb_nescefe">
+		<header/>
+		<body>
+			<trans-unit id="select_layout" xml:space="preserve" approved="yes">
+				<source>Please select a layout template</source>
+				<target>Bitte wählen Sie ein Layout Template aus</target>
+			</trans-unit>
+			<trans-unit id="layout_invalid" xml:space="preserve" approved="yes">
+				<source>Choosen layout is invalid</source>
+				<target>Ausgewähltes Layout ist ungültig</target>
+			</trans-unit>
+			<trans-unit id="no_layout" xml:space="preserve" approved="yes">
+				<source>[None]</source>
+				<target>[Keine]</target>
+			</trans-unit>
+			<trans-unit id="column" xml:space="preserve" approved="yes">
+				<source>Column ###IDX###</source>
+				<target>Spalte ###IDX###</target>
+			</trans-unit>
+			<trans-unit id="update_label" xml:space="preserve" approved="yes">
+				<source>Update Nested Content Elements</source>
+				<target>Update Nested Content Elements</target>
+			</trans-unit>
+			<trans-unit id="update_message" xml:space="preserve" approved="yes">
+				<source>If you have used the &quot;kb_nescefe&quot; extension already before, and updated the extension to the newest version 2.0.0 or later, you will need to run this update wizard once. Just press the &quot;Update&quot; button below. This will change some values in the tt_content table of the database.&lt;br /&gt;&lt;br /&gt;WARNING: Before pressing the &quot;Update&quot; button you should make a BACKUP of your entire database or at least of the tt_content table. In case any problems occur during update you can then restore the previous situation!!!</source>
+				<target>Wenn sie die &quot;kb_nescefe&quot; Erweiterung bereits früher benutzt haben und jetzt ein Update auf die neueste Version 2.0.0 oder höher durchgeführt haben müssen Sie diesen Update-Wizard einmal aufrufen. Einfach den &quot;Update&quot; Button unterhalb einmal betätigen. Dies wird einige Werte der tt_content Tabelle modifizieren. &lt;br /&gt;&lt;br /&gt;WARNUNG: Bevor sie den &quot;Update&quot; Button drücken, sollten Sie auf jeden Fall ein BACKUP der gesamten Datenbank, oder zumindest der tt_content Tabelle durchführen. Wenn beim update Probleme auftreten können sie mit Hilfe eines Backup die vorherige Situation wiederherstellen!!!</target>
+			</trans-unit>
+			<trans-unit id="update_finished" xml:space="preserve" approved="yes">
+				<source>The update was performed. Please take care if all nested content element containers show their contained content elements properly! Please note down the following data for reporting any problems: &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt;</source>
+				<target>Update durchgeführt. Bitte überprüfen Sie ob alle Nested Content Elements Container die in ihnen beinhaltenen Inhaltselemente richtig anzeigen! Bitte notieren sie die folgenden Daten falls sie einen Bugreport erstellen: &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt;</target>
+			</trans-unit>
+			<trans-unit id="update_layout_table_exists" xml:space="preserve" approved="yes">
+				<source>You run this script after already having created container layouts. For this reason it is not possible to convert the old &quot;tx_kbnescefe_containers&quot; to the new &quot;tx_kbnescefe_layout&quot; table. You will have to merge them manually if you require any layouts/containers from the old table. Tip: Use the SQL construct &quot;INSERT INTO SELECT FROM&quot;.</source>
+				<target>Sie führen dieses Skript aus obwohl bereits container layouts angelegt wurden. Daher ist es nicht möglich die alten &quot;tx_kbnescefe_containers&quot; Einträge in neue &quot;tx_kbnescefe_layout&quot; Einträg zu konvertieren. Wenn Sie einige der alten Container/Layouts benötigen müssen Sie diese manuell kopieren. Tip: Benutzen Sie das SQL Konstrukt &quot;INSERT INTO SELECT FROM&quot;.</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

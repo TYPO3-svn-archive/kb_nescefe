@@ -1,0 +1,8 @@
+tt_content
+,"uid","pid","sorting","colPos","deleted","sys_language_uid","l18n_parent","t3ver_wsid","t3ver_state","t3ver_stage","t3ver_oid","t3ver_move_id","header","CType","list_type","kbnescefe_parentPosition","kbnescefe_parentElement","kbnescefe_layout"
+,297,89,256,0,0,0,0,0,0,0,0,0,"Regular Element #1","text","","",0,0
+,298,89,512,0,0,0,0,0,0,0,0,0,"Container Element #2","list","kbnescefe_pi1","",0,1
+,299,89,768,0,0,0,0,0,0,0,0,0,"Regular Element #3","text","","",0,0
+,300,89,1024,10,0,0,0,0,0,0,0,0,"Contained Element #1","text","","0",298,0
+,301,89,1280,10,0,0,0,0,0,0,0,0,"Contained Element #2","text","","0",298,0
+,302,89,128,0,0,0,0,0,0,0,0,0,"Contained Element #3","text","","",0,0

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2014-12-31T15:38:53Z" product-name="kb_nescefe">
+		<header/>
+		<body>
+			<trans-unit id="tt_content.CType_pi1_wizard" xml:space="preserve" approved="yes">
+				<source>Nested content element container</source>
+				<target>Nested Content Element Container</target>
+			</trans-unit>
+			<trans-unit id="tt_content.CType_pi1_desc" xml:space="preserve" approved="yes">
+				<source>This element allows you to create a container which in can hold multiply other content elements in different columns</source>
+				<target>Dieses Element gestattet Ihnen einen Container zu erstellen in welchem mehrere Inhalts Elemente in verschiedenen Spalten untergebracht werden können.</target>
+			</trans-unit>
+			<trans-unit id="tt_content.CType_pi1" xml:space="preserve" approved="yes">
+				<source>Content element container</source>
+				<target>Inhalts Element Container</target>
+			</trans-unit>
+			<trans-unit id="tt_content.parentPosition" xml:space="preserve" approved="yes">
+				<source>Position in Parent Element</source>
+				<target>Position in übergeordnetem Element</target>
+			</trans-unit>
+			<trans-unit id="tt_content.parentElement" xml:space="preserve" approved="yes">
+				<source>Parent Element</source>
+				<target>Übergeordnetes Element</target>
+			</trans-unit>
+			<trans-unit id="tt_content.layout" xml:space="preserve" approved="yes">
+				<source>Layout template</source>
+				<target>Layout Template</target>
+			</trans-unit>
+			<trans-unit id="tt_content.containerColumn" xml:space="preserve" approved="yes">
+				<source>Container column</source>
+				<target>Container Spalte</target>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout" xml:space="preserve" approved="yes">
+				<source>Layout Template</source>
+				<target>Container Template</target>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout.name" xml:space="preserve" approved="yes">
+				<source>Name</source>
+				<target>Name</target>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout.fetemplate" xml:space="preserve" approved="yes">
+				<source>FE-Template</source>
+				<target>FE-Template</target>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout.betemplate" xml:space="preserve" approved="yes">
+				<source>BE-Template</source>
+				<target>BE-Template</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

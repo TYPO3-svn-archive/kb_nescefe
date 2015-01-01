@@ -1,4 +1,12 @@
-2012-07-13 Bernhard Kraft  <kraftb@seicht.co.at>
+2015-01-01 Bernhard Kraft  <kraftb@think-open.at>
+
+	* Updated for TYPO3 6.2 compatibility
+	* Major rewrite of many classes using extbase
+	* Use fluid templating engine
+	* Whole change-of-concept for template handling
+	* Creation of functional unit tests for content element operations (DataHandler actions)
+
+2012-07-13 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Fixed issue with clipboard XCLASS: http://www.toco3.com/de/toco3_blog/blog-post/2011/03/18/typo3-45-und-kb-nescefe-und-security-token.html
 	* Uploaded extension to TER as 1.1.2

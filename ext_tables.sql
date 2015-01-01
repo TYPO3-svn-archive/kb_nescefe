@@ -2,12 +2,13 @@
 
 
 CREATE TABLE tt_content (
-	parentPosition varchar(200) DEFAULT '',
-	container int(11) DEFAULT '0' NOT NULL,
+	kbnescefe_parentPosition varchar(200) DEFAULT '',
+	kbnescefe_parentElement int(11) DEFAULT '0' NOT NULL,
+	kbnescefe_layout int(11) DEFAULT '0' NOT NULL,
 );
 
 
-CREATE TABLE tx_kbnescefe_containers (
+CREATE TABLE tx_kbnescefe_layout (
 	uid int(11) unsigned DEFAULT '0' NOT NULL auto_increment,
 	pid int(11) unsigned DEFAULT '0' NOT NULL,
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,

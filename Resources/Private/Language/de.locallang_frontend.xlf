@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2014-12-31T15:39:53Z" product-name="kb_nescefe">
+		<header/>
+		<body>
+			<trans-unit id="no_element" xml:space="preserve" approved="yes">
+				<source>Content element not available</source>
+				<target>Inhaltselement nicht verfügbar</target>
+			</trans-unit>
+			<trans-unit id="no_template_file" xml:space="preserve" approved="yes">
+				<source>No template file found</source>
+				<target>Keine Template Datei gefunden</target>
+			</trans-unit>
+			<trans-unit id="no_layout" xml:space="preserve" approved="yes">
+				<source>No layout set or available</source>
+				<target>Keine Layout gesetzt oder verfügbar</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

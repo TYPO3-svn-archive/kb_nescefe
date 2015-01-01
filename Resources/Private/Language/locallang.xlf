@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-12-31T15:38:43Z" product-name="kb_nescefe">
+		<header/>
+		<body>
+			<trans-unit id="select_layout" xml:space="preserve">
+				<source>Please select a layout template</source>
+			</trans-unit>
+			<trans-unit id="layout_invalid" xml:space="preserve">
+				<source>Choosen layout is invalid</source>
+			</trans-unit>
+			<trans-unit id="no_layout" xml:space="preserve">
+				<source>[None]</source>
+			</trans-unit>
+			<trans-unit id="column" xml:space="preserve">
+				<source>Column ###IDX###</source>
+			</trans-unit>
+			<trans-unit id="update_label" xml:space="preserve">
+				<source>Update Nested Content Elements</source>
+			</trans-unit>
+			<trans-unit id="update_message" xml:space="preserve">
+				<source>If you have used the &quot;kb_nescefe&quot; extension already before, and updated the extension to the newest version 2.0.0 or later, you will need to run this update wizard once. Just press the &quot;Update&quot; button below. This will change some values in the tt_content table of the database.&lt;br /&gt;&lt;br /&gt;WARNING: Before pressing the &quot;Update&quot; button you should make a BACKUP of your entire database or at least of the tt_content table. In case any problems occur during update you can then restore the previous situation!!!</source>
+			</trans-unit>
+			<trans-unit id="update_finished" xml:space="preserve">
+				<source>The update was performed. Please take care if all nested content element containers show their contained content elements properly! Please note down the following data for reporting any problems: &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt;</source>
+			</trans-unit>
+			<trans-unit id="update_layout_table_exists" xml:space="preserve">
+				<source>You run this script after already having created container layouts. For this reason it is not possible to convert the old &quot;tx_kbnescefe_containers&quot; to the new &quot;tx_kbnescefe_layout&quot; table. You will have to merge them manually if you require any layouts/containers from the old table. Tip: Use the SQL construct &quot;INSERT INTO SELECT FROM&quot;.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

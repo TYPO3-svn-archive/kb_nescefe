@@ -2,6 +2,9 @@
 	# cat=basic; type=boolean; label=Copy recursive: When this option is set the content elements contained in a nested content element will get copied along with their container if the container get's copied.
 copyRecursive = 1
 
+	# cat=basic; type=boolean; label=Localize recursive: When this option is set the content elements contained in a nested content element will also get localized when their container get's localized.
+localizeRecursive = 1
+
 	# cat=basic; type=boolean; label=Templates on normal pages: By using this option you can put nescefe template records into normal pages and not only into sys-folders. Enabling this option makes it easier for you to export/import pages with kb_nescefe records from one site to another by including all used nescefe template records in the export.
 templatesOnPages = 0
 
@@ -10,11 +13,4 @@ templateSoftReference = 0
 
 	# cat=basic; type=int+; label=Container Element colPos: This option allows you to set to which value the colPos field will get set for elements inside a container. Usually 10 is a good choice. It should usually not be visible in the normal page module except for debugging purposes.
 containerElementColPos = 10
-
-	# cat=basic; type=boolean; label=Disable language overlay: When this option is checked no language overlay will happen for elements inside a container. Usually when you have "config.sys_language_overlay" set to "1" the content elements will get retrieved from the default language and will get overlaid with their translations. When this option is set then such a overlay mechanism is note applied to elements inside containers (See documentation for more information)
-disableElementContentOL = 0
-
-	# cat=basic; type=string; label=Extra CSS: This is the path to a file which will get included as CSS. The predefined value "EXT:kb_nescefe/res/be_styles_44.css" fixes some CSS issues with the new TYPO3 branch 4.4.
-beStyles = EXT:kb_nescefe/res/be_styles_44.css
-
 

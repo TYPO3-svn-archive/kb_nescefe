@@ -1,0 +1,23 @@
+{namespace nescefe=ThinkopenAt\KbNescefe\ViewHelpers}
+<nescefe:backend.includeStyle file="EXT:kb_nescefe/Resources/Public/Css/TwoColumns.css" />
+<!--
+You can name each column by using the attribute "columnTitle" i.e.:
+<nescefe:backend.getHeader index="1" columnTitle="Middle column" />
+<nescefe:backend.getHeader index="1" columnTitle="LLL:EXT:myExt/Resources/Private/Translation/locallang.xlf:columnCenter" />
+-->
+<table class="nescefe-table nescefe-two-columns">
+	<tr>
+		<td>
+			<nescefe:backend.getHeader index="0" />
+			<nescefe:backend.getContent index="0" />
+		</td>
+		<td>
+			<nescefe:backend.getHeader index="1" />
+			<nescefe:backend.getContent index="1" />
+		</td>
+		<td>
+			<nescefe:backend.getHeader index="2" />
+			<nescefe:backend.getContent index="2" />
+		</td>
+	</tr>
+</table>

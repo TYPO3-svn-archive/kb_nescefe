@@ -1,0 +1,25 @@
+
+config.tx_extbase {
+	persistence{
+		classes {
+			ThinkopenAt\KbNescefe\Domain\Model\Layout {
+				mapping {
+					tableName = tx_kbnescefe_layout
+				}
+			}
+			ThinkopenAt\KbNescefe\Domain\Model\Content {
+				mapping {
+					tableName = tt_content
+					columns {
+						kbnescefe_parentPosition.mapOnProperty = parentPosition
+						kbnescefe_parentElement.mapOnProperty = parentElement
+						kbnescefe_layout.mapOnProperty = layout
+						l18n_parent.mapOnProperty = l18nParent
+						sys_language_uid.mapOnProperty = sysLanguageUid
+					}
+				}
+			}
+		}
+	}
+}
+

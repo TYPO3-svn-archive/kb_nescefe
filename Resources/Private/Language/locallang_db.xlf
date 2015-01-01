@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-12-31T15:38:53Z" product-name="kb_nescefe">
+		<header/>
+		<body>
+			<trans-unit id="tt_content.CType_pi1_wizard" xml:space="preserve">
+				<source>Nested content element container</source>
+			</trans-unit>
+			<trans-unit id="tt_content.CType_pi1_desc" xml:space="preserve">
+				<source>This element allows you to create a container which in can hold multiply other content elements in different columns</source>
+			</trans-unit>
+			<trans-unit id="tt_content.CType_pi1" xml:space="preserve">
+				<source>Content element container</source>
+			</trans-unit>
+			<trans-unit id="tt_content.parentPosition" xml:space="preserve">
+				<source>Position in Parent Element</source>
+			</trans-unit>
+			<trans-unit id="tt_content.parentElement" xml:space="preserve">
+				<source>Parent Element</source>
+			</trans-unit>
+			<trans-unit id="tt_content.layout" xml:space="preserve">
+				<source>Layout template</source>
+			</trans-unit>
+			<trans-unit id="tt_content.containerColumn" xml:space="preserve">
+				<source>Container column</source>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout" xml:space="preserve">
+				<source>Layout Template</source>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout.name" xml:space="preserve">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout.fetemplate" xml:space="preserve">
+				<source>FE-Template</source>
+			</trans-unit>
+			<trans-unit id="tx_kbnescefe_layout.betemplate" xml:space="preserve">
+				<source>BE-Template</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
