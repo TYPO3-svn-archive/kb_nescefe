@@ -34,6 +34,7 @@ namespace ThinkopenAt\KbNescefe\Controller;
 
 use \TYPO3\CMS\Core\Utility\MathUtility;
 use \TYPO3\CMS\Backend\Utility\BackendUtility;
+use \TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 class FrontendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 

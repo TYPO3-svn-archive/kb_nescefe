@@ -1,5 +1,5 @@
 <?php
-namespace ThinkopenAt\KbNescefe\ViewHelpers;
+namespace ThinkopenAt\KbNescefe\ViewHelpers\Frontend;
 
 /***************************************************************
 *  Copyright notice
@@ -50,7 +50,7 @@ class GetHeaderViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewH
 	 * @api
 	 */
 	public function render($index) {
-		// @todo
+		// @todo: How should a header render in the frontend?
 		return '';
 	}
 

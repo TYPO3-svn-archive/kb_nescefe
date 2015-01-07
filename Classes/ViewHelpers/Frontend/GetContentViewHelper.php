@@ -1,5 +1,5 @@
 <?php
-namespace ThinkopenAt\KbNescefe\ViewHelpers;
+namespace ThinkopenAt\KbNescefe\ViewHelpers\Frontend;
 
 /***************************************************************
 *  Copyright notice
