@@ -12,10 +12,10 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'KB Nested Content Elements',
-	'description' => 'Allows to created content element containers for other content elements. Works similar to gridelements or TV/Flux content columns only it is more easier to configure. kb_nescefe: Nested content elements since 2007!',
+	'description' => 'Allows to create content element containers for other content elements. Works similar to gridelements or TV/Flux content columns only it is more easier to configure. kb_nescefe: Nested content elements since 2007!',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '2.0.0',
+	'version' => '2.0.1',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',

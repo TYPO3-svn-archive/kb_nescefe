@@ -1,3 +1,7 @@
+2015-01-07 Bernhard Kraft  <kraftb@think-open.at>
+
+	* [BUGFIX] Frontend didn't render properly
+
 2015-01-01 Bernhard Kraft  <kraftb@think-open.at>
 
 	* Updated for TYPO3 6.2 compatibility
