@@ -85,6 +85,8 @@ Changelog
 +---------+----------------------+-------------------------------------------------------+
 | 2.0.1   | 2015-01-07 12:00 CET | - [BUGFIX] Frontend didn't render properly            |
 +---------+----------------------+-------------------------------------------------------+
+| 2.0.2   | 2015-01-12 21:45 CET | - [BUGFIX] Error when not layout template selected    |
++---------+----------------------+-------------------------------------------------------+
 
 .. note:: If you find any bug please report them to office@think-open.at or at the
    issue tracker on TYPO3 forge: https://forge.typo3.org/projects/extension-kb\_nescefe/issues
