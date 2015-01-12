@@ -93,6 +93,7 @@ class ContentPreviewController extends AbstractBackendController {
 	 * @return boolean Returns TRUE if prerequisites are fullfilled and rendering should take place.
 	 */
 	protected function checkPrerequisites($params, $parentObject) {
+		global $LANG;
 		if (!($parentObject instanceof \TYPO3\CMS\Backend\View\PageLayoutView)) {
 			$this->content .= 'The extension "kb_nescefe" is only compatible with the default TYPO3 page module. If you use TemplaVoila then use Flexible Content Elements instead';
 			return FALSE;
