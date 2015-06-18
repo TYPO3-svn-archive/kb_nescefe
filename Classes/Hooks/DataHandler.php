@@ -351,26 +351,181 @@ will have to get changed
 				if (($newRec['CType'] == 'list') && ($newRec['list_type'] == 'kbnescefe_pi1')) {
 					$this->remapNescefeContentsInContainer($origUid, $newRec, $copyMissingContents, $language);
 				}
+
+				if ($language) {
+					// As this is a "localize" operation take care of elements being inside a container.
+					// When an element inside a container gets localized the copied/localized version
+					// will not have it's parent container set correctly. The language will indicate the
+					// correct language as specified by the "localize" command but the container pointer
+					// will still point to the "old" container of the original language.
+					$origRec = BackendUtility::getRecord('tt_content', $origUid);
+					if (intval($origRec['kbnescefe_parentElement']) !== 0) {
+						// The original element was inside a container. Handle the situation.
+						$this->assignTranslatedContainer($newRec, $origRec, $language);
+					}
+				}
 			}
 		}
 	}
 
+	/**
+	 * This method retrieves the container of the original language version, then looks
+	 * up any translation of it (If language isn't set to "-1"). It then sets the translated
+	 * container to become the parentElement of the translated record $newRec.
+	 *
+	 * The whole situation looks somehow like in the following schematic:
+	 *
+	 * 	sys_language_uid = 0                         sys_language_uid = 1
+	 *    _____________________                        _____________________        
+	 *    | Original language |   transOrigPointer    | Translated language |
+	 *    |    container C1   |<<---------------------|    container C2     |
+	 *    |                   |                       |                     |
+	 *    |    ____________   |                       |                     |
+	 *    |<==| Original   |  |                       |_____________________|
+	 *    |   | language   |  |
+	 *    |   | element E1 |  |   transOrigPointer     ____________
+	 *    |   |____________|<<------------------------| Translated |
+	 *    |___________________|<======================| element E2 |
+	 *                             nescefeParent      |____________|
+	 *
+	 * It is obvious that the translated element E2 does, after translation, not know
+	 * the container it should be inside C2. Instead it (its kb_nescefePointer) still
+	 * points to the container C1 where its original language element E1 is contained in.
+	 *
+	 * What has to be done is clear: The path to its correct container C2 has to get
+	 * traversed so the UID of its translated container C2 can get determined. Then
+	 * the "nescefeParent" pointer of the the translated element E2 has to get set to it.
+	 *
+	 * Fetching the translation original of E2 is trivial. Determining the container C1
+	 * of E1 is also trivial. But determining the translated version of C1 is non-trivial.
+	 * Theoretically there could be multiple translated versions of C1 for the same language
+	 * (at least the data model allows for this).
+	 *
+	 * If there is no container C2 then the translated element E2 will have its
+	 * nescefe pointer being reset to 0 and will be placed in the same colPos as C1
+	 * (but of course in the alternate language) as contained elements are usually
+	 * placed in a special colPos only reserved for elements inside containers.
+	 *
+	 * @param array $translatedElement: The translated content element
+	 * @param array $originalElement: The original un-translated version of the content element 
+	 * @param integer $language: The language to which the content element got translated
+	 * @return void
+	 */
+	protected function assignTranslatedContainer($translatedElement, $originalElement, $language) {
+		$originalContainer = BackendUtility::getRecord('tt_content', $originalElement['kbnescefe_parentElement']);
+
+		// Guard clause #1
+		if (!is_array($originalContainer)) {
+			// The translated element had a parent container set - but the parent container
+			// does not exist!
+			// Sanitize the original element and this one. Or should an error get thrown?
+			$this->sanitizeRecordValues($originalElement['uid']);
+			$this->sanitizeRecordValues($translatedElement['uid']);
+			return;
+		}
+
+		// Guard clause #2
+		$languageField = $GLOBALS['TCA']['tt_content']['ctrl']['languageField'];
+		if (intval($originalContainer[$languageField]) === -1) {
+			// The container is set to be valid for ALL languaged (sys_language_uid == -1).
+			// No action has to be taken as the translatedElement will point to this container
+			// anyways.
+			return;
+		}
+
+		// Guard clause #3
+		if (intval($originalContainer[$languageField]) !== 0) {
+			throw new \Exception('Unexpected situation. A non-original-language element got translated! Please report a bug!');
+		}
+
+		// Retrieve any translated containers
+		$translationPointerField = $GLOBALS['TCA']['tt_content']['ctrl']['transOrigPointerField'];
+		$languageWhere = ' AND ' . $languageField . '=' . $language;
+		$translatedContainer = BackendUtility::getRecordsByField('tt_content', $translationPointerField, $originalContainer['uid'], $languageWhere);
+
+		// Throw an exception for multiple translated container elements in the same translated language
+		if (count($translatedContainer) > 1) {
+			throw new \Exception('Multiple same-language translations for the same container! If you are sure your setup is correct please file a bug!');
+		}
+
+		if (count($translatedContainer) == 0) {
+			// There is no translated container for the container of this element.
+			// Reset the kb_nescef parent pointers.
+			$baseContainer = $this->getBaseContainer($originalContainer);
+			$this->sanitizeRecordValues($translatedElement['uid'], $baseContainer['colPos']);
+		} else {
+			// Fine. There is exactly one translated container for the original-language elements container
+			$translatedContainer = array_pop($translatedContainer);
+			$update = array();
+			$update['kbnescefe_parentElement'] = $translatedContainer['uid'];
+			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', 'uid='.$translatedElement['uid'], $update);
+		}
+		
+	}
+
+	/**
+	 * This method returns the "base" container for a passed element/container
+	 * This is required for containers being contained in another container to 
+	 * determine the root/base container.
+	 *
+	 * @param array $element: A element/container for which to retrieve the base container
+	 * @return array The base container of the passed container/element
+	 */
+	protected function getBaseContainer(array $element) {
+		while ($parentUid = intval($element['kbnescefe_parentElement'])) {
+			$element = BackendUtility::getRecord('tt_content', $parentUid);
+		}
+		return $element;
+	}
 
 	/**
 	 * Sets sane values after a record has been copied.
+	 * By default the records value will only get sanitized if the
+	 * colPos determines the record is not part of a container but
+	 * the parentElement pointers are still set.
+	 *
+	 * When the "colPos" parameter gets supplied the element will
+	 * get cleaned up in any case and the tt_content "colPos" field
+	 * will get set to this value.
+	 *
+	 * This change (addition of "colPos" parameter) was introduced as
+	 * this method is now not only used by "processCmdmap_afterFinish"
+	 * but also by "assignTranslatedContainer" when there is no
+	 * translated container. The method "assignTranslatedContainer"
+	 * could also have moved the now translated non-contained element
+	 * to the colPos of it's original language container and then call
+	 * this method to clean up. But setting of colPos got integrated
+	 * in this method so exec_UPDATEquery does not need to get called
+	 * twice.
 	 *
 	 * @param integer $uid: The uid of the tt_content record which to sanitize
+	 * @param integer $colPos: A colPos value which should get set.
 	 * @return void
 	 */
-	protected function sanitizeRecordValues($uid) {
+	protected function sanitizeRecordValues($uid, $colPos = NULL) {
 		$uid = intval($uid);
 		$record = BackendUtility::getRecord('tt_content', $uid);
-		
+		$container = BackendUtility::getRecord('tt_content', $record['kbnescefe_parentElement']);
+
 		if (
 			is_array($record) &&
-			intval($record['colPos']) !== intval($this->config['containerElementColPos']) &&
-			($record['kbnescefe_parentPosition'] || $record['kbnescefe_parentElement'] !== 0)
+			(
+				(
+					intval($record['colPos']) !== intval($this->config['containerElementColPos']) &&
+					($record['kbnescefe_parentPosition'] || $record['kbnescefe_parentElement'] !== 0)
+				) // Sanitize record when it has not assigned the container colPos
+				||
+				!is_array($container) // or if its container doesn't exist
+				||
+				($colPos !== NULL) // or if so requested explicitely
+			)
 		) {
+
+			$update = array();
+
+			if ($colPos !== NULL) {
+				$update['colPos'] = $colPos;
+			}
 			// Reset kb_nescefe parent pointer after moving/copying an element out of a container.
 			// It wouldn't hurt if those values stay set but it seems cleaner this way.
 			$update['kbnescefe_parentElement'] = 0;
