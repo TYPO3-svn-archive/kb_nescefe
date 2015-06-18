@@ -37,12 +37,53 @@ namespace ThinkopenAt\KbNescefe\Context;
 class Frontend implements \TYPO3\CMS\Core\SingletonInterface, \ThinkopenAt\KbNescefe\Context\ContextInterface {
 
 	/**
+	 * Page on which a container is located if the container is not on the current content page
+	 * This is will be set for example when an "insertRecords" element is used to render a kb_nescefe
+	 * container.
+	 *
+	 * @var integer
+	 */
+	protected $containerPage = 0;
+
+	/**
 	 * Returns the current page
 	 *
 	 * @return integer The page which is currently shown
 	 */
 	public function getCurrentPage() {
 		return $GLOBALS['TSFE']->id;
+	}
+
+	/**
+	 * Returns the page from which to show content. This can be different from the
+	 * current page for two reasons:
+	 * 1. An "insertRecords" element is rendered which points to a kb_nescefe container.
+	 *    In such a case the PID of the kb_nescefe container can be different from the
+	 *    currently rendered page. The PID of the container will be set in containerPage.
+	 * 2. The "show content from this page" feature of a page record is used. In such
+	 *    a case the "contentPid" property of TSFE will point to the page from which to
+	 *    retrieve content.
+	 *
+	 * @return integer The page which is currently shown
+	 */
+	public function getContentPage() {
+		if ($this->containerPage) {
+			return $this->containerPage;
+		} elseif ($GLOBALS['TSFE']->contentPid) {
+			return $GLOBALS['TSFE']->contentPid;
+		} else {
+			return $this->getCurrentPage();
+		}
+	}
+
+	/**
+	 * Sets the container page being used for retrieving the container and its content elements.
+	 *
+	 * @param integer $containerPage: The page on which the container is located
+	 * @return void
+	 */
+	public function setContainerPage($containerPage) {
+		$this->containerPage = $containerPage;
 	}
 
 	/**

@@ -61,6 +61,12 @@ by which you can configure the behaviour of the extension.
   option to change this as there might be people which use more than 10
   columns (altough this would be a very rare case).
 
+.. warning:: This extension does currently not work properly for multilingual
+   sites. For getting this feature to work a patch of the TYPO3 core is required.
+   The patch has already been submitted to review.typo3.org for review. If you
+   need this feature help developing kb_nescefe, try out the patch and give your comments:
+   https://review.typo3.org/#/c/33485/
+
 .. toctree::
    :maxdepth: 5
    :titlesonly:

@@ -131,6 +131,16 @@ class Backend implements \TYPO3\CMS\Core\SingletonInterface, \ThinkopenAt\KbNesc
 	}
 
 	/**
+	 * Returns the page from which content is shown.
+	 * For the backend this is simply the same as "getCurrentPage"
+	 *
+	 * @return integer The from which content is shown.
+	 */
+	public function getContentPage() {
+		return $this->getCurrentPage();
+	}
+
+	/**
 	 * Always returns TRUE as enable fields should always get ignored in backend context
 	 *
 	 * @return boolean TRUE

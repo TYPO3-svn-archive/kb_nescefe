@@ -87,6 +87,10 @@ Changelog
 +---------+----------------------+-------------------------------------------------------+
 | 2.0.2   | 2015-01-12 21:45 CET | - [BUGFIX] Error when not layout template selected    |
 +---------+----------------------+-------------------------------------------------------+
+| 2.0.3   |                      | - [BUGFIX] Extension breaks on usage of "Show         |
+|         |                      |   content from Page" (#66521)                         |
+|         |                      | - [BUGFIX] Translating a contained element (#65380)   |
++---------+----------------------+-------------------------------------------------------+
 
 .. note:: If you find any bug please report them to office@think-open.at or at the
    issue tracker on TYPO3 forge: https://forge.typo3.org/projects/extension-kb\_nescefe/issues

@@ -80,6 +80,16 @@ class FrontendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 			$this->initializationFailed = 'no_element';
 			return;
 		}
+
+		// Before rendering a container set the container page to "0" as it may still be
+		// set to the PID of some content element having been included via an "insertRecords"
+		// element before. This should probably better get executed after rendering each
+		// container but there is no extbase method to deinitialize an action.
+		$this->context->setContainerPage(0);
+		if ($this->context->getContentPage() !== $contentElement['pid']) {
+			$this->context->setContainerPage($contentElement['pid']);
+		}
+
 		$this->contentRepository->setContext($this->context);
 
 		$this->element = $this->contentRepository->findByIdentifier($contentElement['uid']);
@@ -101,14 +111,14 @@ class FrontendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 		$this->defaultViewObjectName = 'ThinkopenAt\KbNescefe\View\Frontend';
 	}
 
+
 	/**
 	 * Initializes the view before invoking an action method.
 	 *
-	 * This initializes the frontend view class. The view is implemented by ThinkopenAt\KbNescefe\Template\Frontend which
-	 * extends the default view object "TYPO3\CMS\Fluid\View\TemplateView".
+	 * This initializes the frontend view class. The view is implemented by ThinkopenAt\KbNescefe\View\Frontend which
+	 * extends the default view object "TYPO3\CMS\Fluid\View\StandaloneView".
 	 *
 	 * @param ViewInterface $view The view to be initialized
-	 *
 	 * @return void
 	 * @api
 	 */

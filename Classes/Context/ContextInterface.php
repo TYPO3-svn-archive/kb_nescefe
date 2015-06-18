@@ -43,6 +43,13 @@ interface ContextInterface {
 	public function getCurrentPage();
 
 	/**
+	 * Returns the page from which content is shown.
+	 *
+	 * @return integer The page from which conten is shown
+	 */
+	public function getContentPage();
+
+	/**
 	 * Returns whether to ignore enable fields
 	 *
 	 * @return boolean TRUE

@@ -58,14 +58,20 @@ class ContentRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 		$querySettings = $query->getQuerySettings();
 
 		if ($this->context) {
-			$page = $this->context->getCurrentPage();
+			$page = $this->context->getContentPage();
 			$querySettings->setRespectStoragePage(TRUE)->setStoragePageIds(array($page));
 		} else {
 			$querySettings->setRespectStoragePage(FALSE);
 		}
 		$querySettings->setRespectSysLanguage(FALSE);
 
-//		$querySettings->setEnableLanguageOverlay(FALSE);
+		// @todo: Remove this after issue #47192 on forge has been merged with upstream.
+		// Until then you can manually apply the following patch to your TYPO3 core if
+		// you need kb_nescefe working on multilanguage sites:
+		// https://review.typo3.org/#/c/33485/
+		if (method_exists($querySettings, 'setEnableLanguageOverlay')) {
+			$querySettings->setEnableLanguageOverlay(FALSE);
+		}
 
 		$result = $query->matching($query->equals('uid', $identifier))->execute($returnRawQueryResult);
 		if ($returnRawQueryResult) {
@@ -87,35 +93,28 @@ class ContentRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 	public function findByParent(Content $contentElement, $positionInParent = '', $returnRawQueryResult = FALSE) {
 		$query = $this->createQuery();
 
-		// @TODO: Set querySettings to appropriately handle hidden/language
-		/*
-		$showHidden = $this->context->showHidden();
-		$showLanguage = $this->context->showLanguage();
-		$showLanguage = $this->pObj->defLangBinding && $this->lP == 0 ? ' AND sys_language_uid IN (0,-1)' : ' AND sys_language_uid=' . $this->lP;
-		// --> TODO: Set "respectStoragePage" to TRUE and set "pageID"
-		$queryParts = $this->pObj->makeQueryArray('tt_content', $this->pageID, $cpospart . $showHidden . $showLanguage);
-		*/
-
-//		$query->getQuerySettings()->setRespectStoragePage(FALSE);
 		$querySettings = $query->getQuerySettings();
 
-		$page = $this->context->getCurrentPage();
-		$querySettings->setRespectStoragePage(TRUE)->setStoragePageIds(array($page));
+		if ($this->context) {
+			// Hopefully there is a context :)
+			$page = $this->context->getContentPage();
+			$querySettings->setRespectStoragePage(TRUE)->setStoragePageIds(array($page));
+		} else {
+			$querySettings->setRespectStoragePage(FALSE);
+		}
+
 		$querySettings->setRespectSysLanguage(FALSE);
 
-//		$querySettings->setEnableLanguageOverlay(FALSE);
+		// @todo: Remove this after issue #47192 on forge has been merged with upstream.
+		// Until then you can manually apply the following patch to your TYPO3 core if
+		// you need kb_nescefe working on multilanguage sites:
+		// https://review.typo3.org/#/c/33485/
+		if (method_exists($querySettings, 'setEnableLanguageOverlay')) {
+			$querySettings->setEnableLanguageOverlay(FALSE);
+		}
 
 		$matchParent = $query->equals('parentElement', $contentElement->getUid());
 		$querySettings = $query->getQuerySettings();
-
-//		So oder so?
-//		if ($querySettings->getRespectSysLanguage() && $querySettings->getLanguageUid() && ($l18n_parent = $contentElement->getL18nParent()) > 0) {
-/*
-		if (($l18n_parent = $contentElement->getL18nParent()) > 0) {
-			$matchLanguageParent = $query->equals('parentElement', $l18n_parent);
-			$matchParent = $query->logicalOr($matchParent, $matchLanguageParent);
-		}
-*/
 
 		if (strlen($positionInParent)) {
 			$matchPosition = $query->equals('parentPosition', $positionInParent);
@@ -125,8 +124,6 @@ class ContentRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 		$query->matching($matchParent);
 
 		return $query->execute($returnRawQueryResult);
-//		$this->func->getSectionMax($storage);
-//		return $storage;
 	}
 
 	/**
