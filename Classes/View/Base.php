@@ -38,6 +38,11 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
 abstract class Base extends \TYPO3\CMS\Fluid\View\StandaloneView {
 
 	/**
+	 * @var \TYPO3\CMS\Core\Resource\ResourceFactory
+	 */
+	protected $resourceFactory = NULL;
+
+	/**
 	 * @var \ThinkopenAt\KbNescefe\Domain\Model\Layout
 	 */
 	protected $layout = NULL;
@@ -56,11 +61,21 @@ abstract class Base extends \TYPO3\CMS\Fluid\View\StandaloneView {
 	public function setLayout(\ThinkopenAt\KbNescefe\Domain\Model\Layout $layout) {
 		$this->layout = $layout;
 		$templateFile = $this->getTemplateFileFromLayout();
-		$this->fileName = GeneralUtility::getFileAbsFileName($templateFile);
-		if (!@is_file($this->fileName))	{
-			throw new InvalidSettingsException('kb_nescefe: The template file "'.$templateFile.'" does not exist!');
+		if (strpos($templateFile, 'file:') === 0) {
+			$sysFileUid = intval(substr($templateFile, strlen('file:')));
+			$this->resourceFactory = $this->objectManager->get('TYPO3\CMS\Core\Resource\ResourceFactory');
+			$fileObject = $this->resourceFactory->getFileObject($sysFileUid);
+			if (!$fileObject instanceof \TYPO3\CMS\Core\Resource\File) {
+				throw new InvalidSettingsException('kb_nescefe: The template file "'.$templateFile.'" does not exist!');
+			}
+			$this->setTemplateSource($fileObject->getContents());
+		} else {
+			$this->fileName = GeneralUtility::getFileAbsFileName($templateFile);
+			if (!@is_file($this->fileName))	{
+				throw new InvalidSettingsException('kb_nescefe: The template file "'.$templateFile.'" does not exist!');
+			}
+			$this->setTemplatePathAndFilename($this->fileName);
 		}
-		$this->setTemplatePathAndFilename($this->fileName);
 	}
 
 

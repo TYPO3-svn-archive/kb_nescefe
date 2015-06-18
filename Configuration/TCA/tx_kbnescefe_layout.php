@@ -4,7 +4,7 @@ defined ('TYPO3_MODE') or die ('Access denied.');
 $ll = 'LLL:EXT:kb_nescefe/Resources/Private/Language/locallang_db.xlf:';
 
 if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['templatesOnPages']) {
-	t3lib_extMgm::allowTableOnStandardPages('tx_kbnescefe_layout');
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_kbnescefe_layout');
 }
 
 return Array (
@@ -23,9 +23,6 @@ return Array (
 			'fe_group' => 'fe_group',
 		),
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('kb_nescefe').'Resources/Public/Images/icon_tx_kbnescefe_layout.gif',
-	),
-	'feInterface' => Array (
-		'fe_admin_fieldList' => 'hidden, starttime, endtime, fe_group, name, fetemplate, betemplate',
 	),
 	'interface' => Array (
 		'showRecordFieldList' => 'hidden,starttime,endtime,fe_group,name,fetemplate,betemplate'
@@ -98,6 +95,20 @@ return Array (
 				'size' => '50',	
 				'eval' => 'required',
 				'default' => 'EXT:kb_nescefe/Resources/Private/Templates/Frontend/TwoColumns.html',
+				'wizards' => Array(
+					'_PADDING' => 2,
+					'link' => Array(
+						'type' => 'popup',
+						'title' => 'Select kb_nescefe frontend template',
+						'icon' => 'link_popup.gif',
+						'script' => 'browse_links.php?mode=wizard&amp;act=file',
+						'params' => array(
+							'blindLinkOptions' => 'page,folder,mail,url,spec',
+							'allowedExtensions' => 'html,tmpl,txt'
+						),
+						'JSopenParams' => 'height=500,width=500,status=0,menubar=0,scrollbars=1' 
+					)
+				),
 			),
 		),
 		'betemplate' => Array (		
@@ -108,6 +119,20 @@ return Array (
 				'size' => '50',	
 				'eval' => 'required',
 				'default' => 'EXT:kb_nescefe/Resources/Private/Templates/Backend/TwoColumns.html',
+				'wizards' => Array(
+					'_PADDING' => 2,
+					'link' => Array(
+						'type' => 'popup',
+						'title' => 'Select kb_nescefe backend template',
+						'icon' => 'link_popup.gif',
+						'script' => 'browse_links.php?mode=wizard&amp;act=file',
+						'params' => array(
+							'blindLinkOptions' => 'page,folder,mail,url,spec',
+							'allowedExtensions' => 'html,tmpl,txt'
+						),
+						'JSopenParams' => 'height=500,width=500,status=0,menubar=0,scrollbars=1' 
+					)
+				),
 			),
 		),
 	),
