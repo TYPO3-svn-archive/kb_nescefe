@@ -90,6 +90,8 @@ Changelog
 | 2.0.3   |                      | - [BUGFIX] Extension breaks on usage of "Show         |
 |         |                      |   content from Page" (#66521)                         |
 |         |                      | - [BUGFIX] Translating a contained element (#65380)   |
+|         |                      | - [FEATURE] Added file select wizards to the template |
+|         |                      |   fields                                              |
 +---------+----------------------+-------------------------------------------------------+
 
 .. note:: If you find any bug please report them to office@think-open.at or at the
