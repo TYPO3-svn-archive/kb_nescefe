@@ -553,6 +553,9 @@ will have to get changed
 		// Use "DESC" sorting as they will get copied each one and when being copied each records gets inserted "as first"
 		// so copying them by default order would result in the records order being reversed
 		$containedRecords = BackendUtility::getRecordsByField('tt_content', 'pid', $origRec['pid'], ' AND kbnescefe_parentElement = \'' . $origUid . '\'', '', 'sorting DESC');
+		if (!is_array($containedRecords)) {
+			return;
+		}
 		$datamap = array();
 		foreach ($containedRecords as $containedRecord) {
 			$containedUid = $containedRecord['uid'];
