@@ -51,7 +51,10 @@ class Typo3DbBackend extends \TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo
 	 * @param null|integer $workspaceUid
 	 * @return array
 	 */
-	protected function doLanguageAndWorkspaceOverlay(\TYPO3\CMS\Extbase\Persistence\Generic\Qom\SourceInterface $source, array $rows, \ThinkopenAt\KbNescefe\AlternateImplementations\Typo3QuerySettings $querySettings, $workspaceUid = NULL) {
+	protected function doLanguageAndWorkspaceOverlay(\TYPO3\CMS\Extbase\Persistence\Generic\Qom\SourceInterface $source, array $rows, \TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $querySettings, $workspaceUid = NULL) {
+		if (!$querySettings instanceof \ThinkopenAt\KbNescefe\AlternateImplementations\Typo3QuerySettings) {
+			throw new \Exception('The passed querySettings must be an alternate implementation!');
+		}
 		if (! ($querySettings->getEnableLanguageOverlay() || $querySettings->getEnableWorkspaceOverlay())) {
 			// Don't overlay!
 			return $rows;
