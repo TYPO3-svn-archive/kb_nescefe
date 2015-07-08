@@ -46,9 +46,9 @@ class Backend implements \TYPO3\CMS\Core\SingletonInterface, \ThinkopenAt\KbNesc
 	protected $pageLayoutView = NULL;
 
 	/**
-	 * @var \TYPO3\CMS\Backend\Form\FormEngine
+	 * @var \TYPO3\CMS\Backend\Form\DataPreprocessor
 	 */
-	protected $formHandler = NULL;
+	protected $dataPreprocessor = NULL;
 
 	/**
 	 * @var array<string:string|boolean> An array with content element positions as keys and their label (or TRUE) as value
@@ -88,11 +88,11 @@ class Backend implements \TYPO3\CMS\Core\SingletonInterface, \ThinkopenAt\KbNesc
 	/**
 	 * Sets a FormHandler object instance
 	 *
-	 * @param \TYPO3\CMS\Backend\Form\FormEngine $formHandler: A form handler instance
+	 * @param \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject: The BE data preprocessor object instance
 	 * @return void
 	 */
-	public function setFormHandler(\TYPO3\CMS\Backend\Form\FormEngine $formHandler) {
-		$this->formHandler = $formHandler;
+	public function setDataPreprocessor(\TYPO3\CMS\Backend\Form\DataPreprocessor $dataPreprocessor) {
+		$this->dataPreprocessor = $dataPreprocessor;
 	}
 
 	/**

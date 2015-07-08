@@ -45,7 +45,7 @@ class TcaItemsProcessing {
 	 * @param \TYPO3\CMS\Backend\Form\FormEngine $parentObject: The object from which this user function is called
 	 * @return array The processed items
 	 */
-	public function contentPositions($params, \TYPO3\CMS\Backend\Form\FormEngine $parentObject) {
+	public function contentPositions($params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
 		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$tcaItemsController = $objectManager->get('ThinkopenAt\KbNescefe\Controller\TcaItemsController');
 		$tcaItemsController->contentPositions($params, $parentObject);
@@ -59,7 +59,7 @@ class TcaItemsProcessing {
 	 * @param \TYPO3\CMS\Backend\Form\FormEngine $parentObject: The object from which this user function is called
 	 * @return array The processed items
 	 */
-	public function colPosHandling(array $params, \TYPO3\CMS\Backend\Form\FormEngine $parentObject) {
+	public function colPosHandling(array $params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
 		GeneralUtility::callUserFunction($GLOBALS['TCA']['tt_content']['columns']['colPos']['config']['origItemsProcFunc'], $params, $parentObject);
 		$params['items']['kb_nescefe'] = Array($GLOBALS['LANG']->sL('LLL:EXT:kb_nescefe/Resources/Private/Language/locallang_db.xlf:tt_content.containerColumn'), $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['containerElementColPos']);
 	}
