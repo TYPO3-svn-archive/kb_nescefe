@@ -60,6 +60,16 @@ class NewContentElementWizard implements \TYPO3\CMS\Backend\Wizard\NewContentEle
 	public function manipulateWizardItems(&$wizardItems, &$parentObject) {
 		global $BACK_PATH;
 
+		$config_CType = &$GLOBALS['TCA']['tt_content']['columns']['CType']['config'];
+		$authModeDeny_CType = $config_CType['type'] == 'select' && $config_CType['authMode'] && !$GLOBALS['BE_USER']->checkAuthMode('tt_content', 'CType', 'list', $config_CType['authMode']);
+
+		$config_list_type = &$GLOBALS['TCA']['tt_content']['columns']['list_type']['config'];
+		$authModeDeny_list_type = $config_list_type['type'] == 'select' && $config_list_type['authMode'] && !$GLOBALS['BE_USER']->checkAuthMode('tt_content', 'list_type', 'kbnescefe_pi1', $config_list_type['authMode']);
+
+		if ($authModeDeny_CType || $authModeDeny_list_type) {
+			return;
+		}
+
 		$this->init($parentObject);
 
 		list($parentPosition, $parentElement) = $this->determineParent();
