@@ -47,3 +47,11 @@ if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['templateSoftReference'
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $tempColumns, 1);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', 'kbnescefe_parentElement, kbnescefe_parentPosition');
 
+// Set fields to be shown/disabled for a kb_nescefe container tt_content element.
+$TCA['tt_content']['types']['list']['subtypes_excludelist']['kbnescefe_pi1'] = 'pages,layout,select_key';
+$TCA['tt_content']['types']['list']['subtypes_addlist']['kbnescefe_pi1'] = 'kbnescefe_layout';
+
+// Register itemsProcFunc for "tt_content:colPos"
+$TCA['tt_content']['columns']['colPos']['config']['origItemsProcFunc'] = $TCA['tt_content']['columns']['colPos']['config']['itemsProcFunc'];
+$TCA['tt_content']['columns']['colPos']['config']['itemsProcFunc'] = 'ThinkopenAt\KbNescefe\Hooks\TcaItemsProcessing->colPosHandling';
+

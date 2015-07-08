@@ -13,14 +13,6 @@ defined ('TYPO3_MODE') or die ('Access denied.');
 mod.wizards.newContentElement.wizardItems.common.show := addToList(kbnescefe_pi1);
 ');
 
-
-$TCA['tt_content']['types']['list']['subtypes_excludelist']['kbnescefe_pi1'] = 'pages,layout,select_key';
-$TCA['tt_content']['types']['list']['subtypes_addlist']['kbnescefe_pi1'] = 'kbnescefe_layout';
-
-// Register itemsProcFunc for "tt_content:colPos"
-$TCA['tt_content']['columns']['colPos']['config']['origItemsProcFunc'] = $TCA['tt_content']['columns']['colPos']['config']['itemsProcFunc'];
-$TCA['tt_content']['columns']['colPos']['config']['itemsProcFunc'] = 'ThinkopenAt\KbNescefe\Hooks\TcaItemsProcessing->colPosHandling';
-
 if (TYPO3_MODE == 'BE') {
 	$wizard = 'ThinkopenAt\KbNescefe\Hooks\NewContentElementWizard';
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms']['db_new_content_el']['wizardItemsHook']['kb_nescefe'] = $wizard;
