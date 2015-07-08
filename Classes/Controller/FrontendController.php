@@ -118,11 +118,11 @@ class FrontendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 	 * This initializes the frontend view class. The view is implemented by ThinkopenAt\KbNescefe\View\Frontend which
 	 * extends the default view object "TYPO3\CMS\Fluid\View\StandaloneView".
 	 *
-	 * @param ViewInterface $view The view to be initialized
+	 * @param \ThinkopenAt\KbNescefe\View\Base $view The view to be initialized
 	 * @return void
 	 * @api
 	 */
-	protected function initializeView(ViewInterface $view) {
+	protected function initializeView(\ThinkopenAt\KbNescefe\View\Base $view) {
 		try {
 			$view->setLayout($this->layout);
 		} catch (\ThinkopenAt\KbNescefe\Exceptions\InvalidSettingsException $e) {
