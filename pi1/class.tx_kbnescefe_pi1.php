@@ -105,7 +105,7 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 
 	function func_CONTENT($contentElements, $nkey, &$callObj) {
 		if ($GLOBALS['TSFE']->sys_language_contentOL && $this->disableElementContentOL) {
-			$id = $this->cObj->data['_LOCALIZED_UID'];
+			$id = $this->cObj->data['_LOCALIZED_UID'] ? : $this->cObj->data['uid'];
 		} else {
 			$id = $this->cObj->data['uid'];
 		}
