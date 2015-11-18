@@ -80,7 +80,7 @@ class tx_kbnescefe_pi1 extends tslib_pibase {
 			// Build up query and retrieve elements
 		$ef = $GLOBALS['TSFE']->sys_page->enableFields('tt_content');
 		$pid = $this->cObj->data['pid'];
-		$useUid = $this->cObj->data['uid'];
+		$useUid = $this->cObj->data['_LOCALIZED_UID'] ? : $this->cObj->data['uid'];
 		$containerQuery = 'parentPosition LIKE \'' . $useUid . '\_\_%\'';
 		
 		if (intval($this->cObj->data['l18n_parent']) > 0) {
