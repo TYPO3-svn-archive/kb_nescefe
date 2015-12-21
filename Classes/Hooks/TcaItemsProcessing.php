@@ -42,10 +42,10 @@ class TcaItemsProcessing {
 	 * This method alters the available items/option in the drop down for selecting the position of a tt_content element in its kb_nescefe parent.
 	 *
 	 * @param array $params: The variables passed to the hook
-	 * @param \TYPO3\CMS\Backend\Form\FormEngine $parentObject: The object from which this user function is called
+	 * @param \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject: The object from which this user function is called
 	 * @return array The processed items
 	 */
-	public function contentPositions($params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
+	public function contentPositions($params, \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject) {
 		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$tcaItemsController = $objectManager->get('ThinkopenAt\KbNescefe\Controller\TcaItemsController');
 		$tcaItemsController->contentPositions($params, $parentObject);
@@ -56,14 +56,13 @@ class TcaItemsProcessing {
 	 * "invalid" in FormEngine fields.
 	 *
 	 * @param array $params: The variables passed to the hook
-	 * @param \TYPO3\CMS\Backend\Form\FormEngine $parentObject: The object from which this user function is called
+	 * @param \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject: The object from which this user function is called
 	 * @return array The processed items
 	 */
-	public function colPosHandling(array $params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
+	public function colPosHandling(array $params, \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject) {
 		GeneralUtility::callUserFunction($GLOBALS['TCA']['tt_content']['columns']['colPos']['config']['origItemsProcFunc'], $params, $parentObject);
 		$params['items']['kb_nescefe'] = Array($GLOBALS['LANG']->sL('LLL:EXT:kb_nescefe/Resources/Private/Language/locallang_db.xlf:tt_content.containerColumn'), $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kb_nescefe']['containerElementColPos']);
 	}
-
 
 }
 

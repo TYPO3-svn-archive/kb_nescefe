@@ -2,14 +2,16 @@
 table.nescefe-two-columns {
 	padding: 0px;
 	margin: 0px;
-	border: 1px dotted #333333;
 	border-collapse: collapse;
 	width: 100%;
 }
 
 table.nescefe-two-columns > tbody > tr > td {
-	border: 1px dotted #333333;
 	padding: 5px;
 	vertical-align: top;
+}
+
+table.nescefe-two-columns > tbody > tr > td.nescefe-two-columns-left {
+	border-right: 1px solid #cdcdcd;
 }
 

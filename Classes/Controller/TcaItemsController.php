@@ -46,10 +46,10 @@ class TcaItemsController extends AbstractBackendController {
 	 * Entry method for generating content positions
 	 *
 	 * @param array $params: The variables passed to the hook
-	 * @param \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject: The BE data preprocessor object instance
+	 * @param \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject: The BE data preprocessor object instance
 	 * @return array The processed items
 	 */
-	public function contentPositions(array $params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
+	public function contentPositions(array $params, \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject) {
 		$this->baseControllerSetup();
 		$this->processRequest($params, $parentObject);
 		$this->baseControllerShutdown();
@@ -62,10 +62,10 @@ class TcaItemsController extends AbstractBackendController {
 	 * (paths) of this element in it's parent.
 	 *
 	 * @param array $params: The variables passed to the hook
-	 * @param \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject: The BE data preprocessor object instance
+	 * @param \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject: A form data provider object instance
 	 * @return array The processed items
 	 */
-	protected function processRequest(array $params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
+	protected function processRequest(array $params, \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject) {
 		$render = $this->checkPrerequisites($params, $parentObject);
 		if (!$render) {
 			$label = $GLOBALS['LANG']->sL('LLL:EXT:kb_nescefe/Resources/Private/Language/locallang.xlf:no_layout');
@@ -93,14 +93,14 @@ class TcaItemsController extends AbstractBackendController {
 	 * Checks various conditions/prerequisites which are required for proper rendering.
 	 *
 	 * @param array $params: Contains some parameters passed to this method by the page module
-	 * @param \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject: The BE data preprocessor object instance
+	 * @param \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject: A form data provider object instance
 	 * @return boolean Returns TRUE if prerequisites are fullfilled and rendering should take place.
 	 */
-	protected function checkPrerequisites(array $params, \TYPO3\CMS\Backend\Form\DataPreprocessor $parentObject) {
+	protected function checkPrerequisites(array $params, \TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider $parentObject) {
 		if ($params['table'] !== 'tt_content') {
 			return FALSE;
 		}
-		$this->context->setDataPreprocessor($parentObject);
+		$this->context->setDataProvider($parentObject);
 		$this->context->setCurrentPage($params['row']['pid']);
 
 		if (!$this->initializeAction($params['row'])) {

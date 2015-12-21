@@ -63,7 +63,8 @@ class IncludeStyleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
 		}
 		$absFile = GeneralUtility::getFileAbsFileName(trim($file));
 		if (is_file($absFile) && is_readable($absFile)) {
-			$GLOBALS['SOBE']->doc->inDocStylesArray['kb_nescefe_'.md5($absFile)] = GeneralUtility::getURL($absFile);
+			$relFile = preg_replace('#^'.preg_quote(PATH_site, '#').'#', '', $absFile);
+			$GLOBALS['SOBE']->getModuleTemplate()->getPageRenderer()->addCssFile('../' . $relFile);
 		}
 		return '';
 	}

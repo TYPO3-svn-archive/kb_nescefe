@@ -2,14 +2,16 @@
 table.nescefe-horizontal-columns {
 	padding: 0px;
 	margin: 0px;
-	border: 1px dotted #333333;
 	border-collapse: collapse;
 	width: 100%;
 }
 
-table.nescefe-horizontal-columns td {
-	border: 1px dotted #333333;
+table.nescefe-horizontal-columns > tbody > tr > td {
 	padding: 5px;
 	vertical-align: top;
+}
+
+table.nescefe-horizontal-columns > tbody > tr > td.nescefe-horizontal-columns-column {
+	border-right: 1px solid #cdcdcd;
 }
 

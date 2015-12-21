@@ -14,27 +14,14 @@ $EM_CONF[$_EXTKEY] = array(
 	'title' => 'KB Nested Content Elements',
 	'description' => 'Allows to create content element containers for other content elements. Works similar to gridelements or TV/Flux content columns only it is more easier to configure. kb_nescefe: Nested content elements since 2007!',
 	'category' => 'plugin',
-	'shy' => 0,
-	'version' => '2.0.3',
-	'dependencies' => '',
-	'conflicts' => '',
-	'priority' => '',
-	'loadOrder' => '',
-	'module' => '',
+	'version' => '2.1.0',
 	'state' => 'stable',
-	'uploadfolder' => 0,
-	'createDirs' => '',
-	'modify_tables' => '',
-	'clearcacheonload' => 0,
-	'lockType' => '',
 	'author' => 'Bernhard Kraft',
 	'author_email' => 'kraftb@think-open.at',
 	'author_company' => 'think-open.at GmbH',
-	'CGLcompliance' => '',
-	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '6.2.0-7.3.99'
+			'typo3' => '7.6.0-7.6.99'
 		),
 	),
 );

@@ -87,11 +87,13 @@ Changelog
 +---------+----------------------+-------------------------------------------------------+
 | 2.0.2   | 2015-01-12 21:45 CET | - [BUGFIX] Error when not layout template selected    |
 +---------+----------------------+-------------------------------------------------------+
-| 2.0.3   |                      | - [BUGFIX] Extension breaks on usage of "Show         |
+| 2.0.3   | 2015-06-18 12:00 CET | - [BUGFIX] Extension breaks on usage of "Show         |
 |         |                      |   content from Page" (#66521)                         |
 |         |                      | - [BUGFIX] Translating a contained element (#65380)   |
 |         |                      | - [FEATURE] Added file select wizards to the template |
 |         |                      |   fields                                              |
++---------+----------------------+-------------------------------------------------------+
+| 2.1.0   | 2015-12-21 19:00 CET | - [TASK] Update to TYPO3 7.6 LTS compatibility        |
 +---------+----------------------+-------------------------------------------------------+
 
 .. note:: If you find any bug please report them to office@think-open.at or at the

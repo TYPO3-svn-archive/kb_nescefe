@@ -2,14 +2,17 @@
 table.nescefe-three-columns {
 	padding: 0px;
 	margin: 0px;
-	border: 1px dotted #333333;
 	border-collapse: collapse;
 	width: 100%;
 }
 
-table.nescefe-three-columns td {
-	border: 1px dotted #333333;
+table.nescefe-three-columns > tbody > tr > td {
 	padding: 5px;
 	vertical-align: top;
+}
+
+table.nescefe-three-columns > tbody > tr > td.nescefe-three-columns-middle {
+	border-left: 1px solid #cdcdcd;
+	border-right: 1px solid #cdcdcd;
 }
 
