@@ -37,10 +37,12 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Backend\Utility\IconUtility;
 use \TYPO3\CMS\Core\Versioning\VersionState;
 use \TYPO3\CMS\Lang\LanguageService;
-use \TYPO3\CMS\Core\Page\PageRenderer;
-use \TYPO3\CMS\Core\Type\Bitmask\Permission;
-use \TYPO3\CMS\Core\Imaging\Icon;
-use \TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 
@@ -81,7 +83,7 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 	 * Renders Content Elements from the tt_content table from page id
 	 *
 	 * This method is an exact copy from \TYPO3\CMS\Backend\View\PageLayoutView
-	 * The only change is enclosed in a comment marker "// --- CHANGED for kb_nescefe ---- begin ---------"
+	 * The only few changes are enclosed in a comment marker "// --- CHANGED for kb_nescefe ---- begin ---------"
 	 * and an according "end" marker. Indeed only a signal will get emitted after generating
 	 * a content element head/content.
 	 *
@@ -90,6 +92,8 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 	 */
 	public function getTable_tt_content($id)
 	{
+		$backendUser = $this->getBackendUser();
+		$this->pageinfo = BackendUtility::readPageAccess($this->id, '');
 		$backendUser = $this->getBackendUser();
 		$this->pageinfo = BackendUtility::readPageAccess($this->id, '');
 		$this->initializeLanguages();
@@ -183,23 +187,29 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 							'colPos' => $key,
 							'uid_pid' => $id,
 							'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
-						];
+								];
+						// --- CHANGED for kb_nescefe ---- begin ---------
+						$urlParameters = $this->alterNewContentElementUrlParameters($urlParameters);
+						// --- CHANGED for kb_nescefe ---- end ---------
 						$url = BackendUtility::getModuleUrl('new_content_element', $urlParameters);
 					} else {
 						$urlParameters = [
 							'edit' => [
-							'tt_content' => [
-							$id => 'new'
-							]
+								'tt_content' => [
+									$id => 'new'
+								]
 							],
 							'defVals' => [
 								'tt_content' => [
-								'colPos' => $key,
-							'sys_language_uid' => $lP
+									'colPos' => $key,
+									'sys_language_uid' => $lP
 								]
 							],
 							'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
 						];
+						// --- CHANGED for kb_nescefe ---- begin ---------
+						$urlParameters = $this->alterNewContentElementUrlParameters($urlParameters);
+						// --- CHANGED for kb_nescefe ---- end ---------
 						$url = BackendUtility::getModuleUrl('record_edit', $urlParameters);
 					}
 
@@ -294,7 +304,7 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 										'colPos' => $row['colPos'],
 										'uid_pid' => -$row['uid'],
 										'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
-									];
+											];
 									$url = BackendUtility::getModuleUrl('new_content_element', $urlParameters);
 								} else {
 									$urlParameters = [
@@ -304,7 +314,7 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 										]
 										],
 										'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
-									];
+											];
 									$url = BackendUtility::getModuleUrl('record_edit', $urlParameters);
 								}
 								$singleElementHTML .= '
@@ -339,10 +349,9 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 						? '&edit[tt_content][' . $editUidList . ']=edit' . $pageTitleParamForAltDoc
 						: '';
 					$head[$key] .= $this->tt_content_drawColHeader($colTitle, $editParam, '', $pasteP);
-
-					// --- CHANGED for kb_nescefe ---- begin ---------"
+					// --- CHANGED for kb_nescefe ---- begin ---------
 					$this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'getTable_tt_content:renderedColumn', array($head[$key], $content[$key]));
-					// --- CHANGED for kb_nescefe ---- end ---------"
+					// --- CHANGED for kb_nescefe ---- end ---------
 				}
 			}
 			// For each column, fit the rendered content into a table cell:
@@ -418,68 +427,100 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 									' (' . $this->getLanguageService()->getLL('noAccess') . ')', '', '');
 									} elseif (isset($columnConfig['name']) && $columnConfig['name'] !== '') {
 									$grid .= $this->tt_content_drawColHeader($this->getLanguageService()->sL($columnConfig['name'])
-											. ' (' . $this->getLanguageService()->getLL('notAssigned') . ')', '', '');
+										. ' (' . $this->getLanguageService()->getLL('notAssigned') . ')', '', '');
+										} else {
+										$grid .= $this->tt_content_drawColHeader($this->getLanguageService()->getLL('notAssigned'), '', '');
+										}
+
+										$grid .= '</td>';
+										}
+										$grid .= '</tr>';
+										}
+										$out .= $grid . '</table></div>';
+										}
+										// CSH:
+										$out .= BackendUtility::cshItem($this->descrTable, 'columns_multi');
+										}
+										// If language mode, then make another presentation:
+										// Notice that THIS presentation will override the value of $out!
+										// But it needs the code above to execute since $languageColumn is filled with content we need!
+										if ($this->tt_contentConfig['languageMode']) {
+										// Get language selector:
+										$languageSelector = $this->languageSelector($id);
+										// Reset out - we will make new content here:
+										$out = '';
+										// Traverse languages found on the page and build up the table displaying them side by side:
+										$cCont = array();
+										$sCont = array();
+										foreach ($langListArr as $lP) {
+											// Header:
+											$lP = (int)$lP;
+											$cCont[$lP] = '
+												<td valign="top" class="t3-page-column" data-language-uid="' . $lP . '">
+												<h2>' . htmlspecialchars($this->tt_contentConfig['languageCols'][$lP]) . '</h2>
+												</td>';
+
+											// "View page" icon is added:
+											$viewLink = '';
+											if (!VersionState::cast($this->getPageLayoutController()->pageinfo['t3ver_state'])->equals(VersionState::DELETE_PLACEHOLDER)) {
+												$onClick = BackendUtility::viewOnClick($this->id, '', BackendUtility::BEgetRootLine($this->id), '', '', ('&L=' . $lP));
+												$viewLink = '<a href="#" class="btn btn-default btn-sm" onclick="' . htmlspecialchars($onClick) . '" title="' . $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xlf:labels.showPage', true) . '">' . $this->iconFactory->getIcon('actions-view', Icon::SIZE_SMALL)->render() . '</a>';
+											}
+											// Language overlay page header:
+											if ($lP) {
+												list($lpRecord) = BackendUtility::getRecordsByField('pages_language_overlay', 'pid', $id, 'AND sys_language_uid=' . $lP);
+												BackendUtility::workspaceOL('pages_language_overlay', $lpRecord);
+												$params = '&edit[pages_language_overlay][' . $lpRecord['uid'] . ']=edit&overrideVals[pages_language_overlay][sys_language_uid]=' . $lP;
+												$recordIcon = BackendUtility::wrapClickMenuOnIcon(
+														$this->iconFactory->getIconForRecord('pages_language_overlay', $lpRecord, Icon::SIZE_SMALL)->render(),
+														'pages_language_overlay',
+														$lpRecord['uid']
+														);
+												$urlParameters = [
+													'edit' => [
+													'pages_language_overlay' => [
+													$lpRecord['uid'] => 'edit'
+													]
+													],
+													'overrideVals' => [
+														'pages_language_overlay' => [
+														'sys_language_uid' => $lP
+														]
+														],
+													'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
+														];
+												$url = BackendUtility::getModuleUrl('record_edit', $urlParameters);
+												$editLink = ($this->getBackendUser()->check('tables_modify', 'pages_language_overlay')
+														? '<a href="' . htmlspecialchars($url) . '" class="btn btn-default btn-sm"'
+														. ' title="' . $this->getLanguageService()->getLL('edit', true) . '">'
+														. $this->iconFactory->getIcon('actions-open', Icon::SIZE_SMALL)->render() . '</a>'
+														: ''
+													    );
+
+												$lPLabel =
+													'<div class="btn-group">'
+													. $viewLink
+													. $editLink
+													. '</div>'
+													. ' ' . $recordIcon . ' ' . htmlspecialchars(GeneralUtility::fixed_lgd_cs($lpRecord['title'], 20));
 											} else {
-											$grid .= $this->tt_content_drawColHeader($this->getLanguageService()->getLL('notAssigned'), '', '');
-											}
-
-											$grid .= '</td>';
-											}
-											$grid .= '</tr>';
-											}
-											$out .= $grid . '</table></div>';
-											}
-											// CSH:
-											$out .= BackendUtility::cshItem($this->descrTable, 'columns_multi');
-											}
-											// If language mode, then make another presentation:
-											// Notice that THIS presentation will override the value of $out!
-											// But it needs the code above to execute since $languageColumn is filled with content we need!
-											if ($this->tt_contentConfig['languageMode']) {
-											// Get language selector:
-											$languageSelector = $this->languageSelector($id);
-											// Reset out - we will make new content here:
-											$out = '';
-											// Traverse languages found on the page and build up the table displaying them side by side:
-											$cCont = array();
-											$sCont = array();
-											foreach ($langListArr as $lP) {
-												// Header:
-												$lP = (int)$lP;
-												$cCont[$lP] = '
-													<td valign="top" class="t3-page-column" data-language-uid="' . $lP . '">
-													<h2>' . htmlspecialchars($this->tt_contentConfig['languageCols'][$lP]) . '</h2>
-													</td>';
-
-												// "View page" icon is added:
-												$viewLink = '';
-												if (!VersionState::cast($this->getPageLayoutController()->pageinfo['t3ver_state'])->equals(VersionState::DELETE_PLACEHOLDER)) {
-													$onClick = BackendUtility::viewOnClick($this->id, '', BackendUtility::BEgetRootLine($this->id), '', '', ('&L=' . $lP));
-													$viewLink = '<a href="#" class="btn btn-default btn-sm" onclick="' . htmlspecialchars($onClick) . '" title="' . $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xlf:labels.showPage', true) . '">' . $this->iconFactory->getIcon('actions-view', Icon::SIZE_SMALL)->render() . '</a>';
-												}
-												// Language overlay page header:
-												if ($lP) {
-													list($lpRecord) = BackendUtility::getRecordsByField('pages_language_overlay', 'pid', $id, 'AND sys_language_uid=' . $lP);
-													BackendUtility::workspaceOL('pages_language_overlay', $lpRecord);
-													$params = '&edit[pages_language_overlay][' . $lpRecord['uid'] . ']=edit&overrideVals[pages_language_overlay][sys_language_uid]=' . $lP;
+												$editLink = '';
+												$recordIcon = '';
+												if ($this->getBackendUser()->checkLanguageAccess(0)) {
 													$recordIcon = BackendUtility::wrapClickMenuOnIcon(
-															$this->iconFactory->getIconForRecord('pages_language_overlay', $lpRecord, Icon::SIZE_SMALL)->render(),
-															'pages_language_overlay',
-															$lpRecord['uid']
+															$this->iconFactory->getIconForRecord('pages', $this->pageRecord,
+																Icon::SIZE_SMALL)->render(),
+															'pages',
+															$this->id
 															);
 													$urlParameters = [
 														'edit' => [
-														'pages_language_overlay' => [
-														$lpRecord['uid'] => 'edit'
+														'pages' => [
+														$this->id => 'edit'
 														]
 														],
-														'overrideVals' => [
-															'pages_language_overlay' => [
-															'sys_language_uid' => $lP
-															]
-														],
 														'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
-													];
+															];
 													$url = BackendUtility::getModuleUrl('record_edit', $urlParameters);
 													$editLink = ($this->getBackendUser()->check('tables_modify', 'pages_language_overlay')
 															? '<a href="' . htmlspecialchars($url) . '" class="btn btn-default btn-sm"'
@@ -487,93 +528,61 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 															. $this->iconFactory->getIcon('actions-open', Icon::SIZE_SMALL)->render() . '</a>'
 															: ''
 														    );
+												}
 
-													$lPLabel =
-														'<div class="btn-group">'
-														. $viewLink
-														. $editLink
-														. '</div>'
-														. ' ' . $recordIcon . ' ' . htmlspecialchars(GeneralUtility::fixed_lgd_cs($lpRecord['title'], 20));
-												} else {
-													$editLink = '';
-													$recordIcon = '';
-													if ($this->getBackendUser()->checkLanguageAccess(0)) {
-														$recordIcon = BackendUtility::wrapClickMenuOnIcon(
-																$this->iconFactory->getIconForRecord('pages', $this->pageRecord,
-																	Icon::SIZE_SMALL)->render(),
-																'pages',
-																$this->id
+												$lPLabel =
+													'<div class="btn-group">'
+													. $viewLink
+													. $editLink
+													. '</div>'
+													. ' ' . $recordIcon . ' ' . htmlspecialchars(GeneralUtility::fixed_lgd_cs($this->pageRecord['title'], 20));
+											}
+											$sCont[$lP] = '
+												<td nowrap="nowrap" class="t3-page-column t3-page-lang-label">' . $lPLabel . '</td>';
+										}
+										// Add headers:
+										$out .= '<tr>' . implode($cCont) . '</tr>';
+										$out .= '<tr>' . implode($sCont) . '</tr>';
+										unset($cCont, $sCont);
+
+										// Traverse previously built content for the columns:
+										foreach ($languageColumn as $cKey => $cCont) {
+											$out .= '<tr>';
+											foreach ($cCont as $languageId => $columnContent) {
+												$out .= '<td valign="top" class="t3-grid-cell t3-page-column t3js-page-column t3js-page-lang-column t3js-page-lang-column-' . $languageId . '">' . $columnContent . '</td>';
+											}
+											$out .= '</tr>';
+											if ($this->defLangBinding) {
+												// "defLangBinding" mode
+												foreach ($defLanguageCount[$cKey] as $defUid) {
+													$cCont = array();
+													foreach ($langListArr as $lP) {
+														$cCont[] = $defLangBinding[$cKey][$lP][$defUid] . $this->newLanguageButton(
+																$this->getNonTranslatedTTcontentUids(array($defUid), $id, $lP),
+																$lP,
+																$cKey
 																);
-														$urlParameters = [
-															'edit' => [
-															'pages' => [
-															$this->id => 'edit'
-															]
-															],
-															'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
-														];
-														$url = BackendUtility::getModuleUrl('record_edit', $urlParameters);
-														$editLink = ($this->getBackendUser()->check('tables_modify', 'pages_language_overlay')
-																? '<a href="' . htmlspecialchars($url) . '" class="btn btn-default btn-sm"'
-																. ' title="' . $this->getLanguageService()->getLL('edit', true) . '">'
-																. $this->iconFactory->getIcon('actions-open', Icon::SIZE_SMALL)->render() . '</a>'
-																: ''
-															    );
 													}
-
-													$lPLabel =
-														'<div class="btn-group">'
-														. $viewLink
-														. $editLink
-														. '</div>'
-														. ' ' . $recordIcon . ' ' . htmlspecialchars(GeneralUtility::fixed_lgd_cs($this->pageRecord['title'], 20));
-												}
-												$sCont[$lP] = '
-													<td nowrap="nowrap" class="t3-page-column t3-page-lang-label">' . $lPLabel . '</td>';
-											}
-											// Add headers:
-											$out .= '<tr>' . implode($cCont) . '</tr>';
-											$out .= '<tr>' . implode($sCont) . '</tr>';
-											unset($cCont, $sCont);
-
-											// Traverse previously built content for the columns:
-											foreach ($languageColumn as $cKey => $cCont) {
-												$out .= '<tr>';
-												foreach ($cCont as $languageId => $columnContent) {
-													$out .= '<td valign="top" class="t3-grid-cell t3-page-column t3js-page-column t3js-page-lang-column t3js-page-lang-column-' . $languageId . '">' . $columnContent . '</td>';
-												}
-												$out .= '</tr>';
-												if ($this->defLangBinding) {
-													// "defLangBinding" mode
-													foreach ($defLanguageCount[$cKey] as $defUid) {
-														$cCont = array();
-														foreach ($langListArr as $lP) {
-															$cCont[] = $defLangBinding[$cKey][$lP][$defUid] . $this->newLanguageButton(
-																	$this->getNonTranslatedTTcontentUids(array($defUid), $id, $lP),
-																	$lP,
-																	$cKey
-																	);
-														}
-														$out .= '
-															<tr>
-															<td valign="top" class="t3-grid-cell">' . implode(('</td>' . '
-																		<td valign="top" class="t3-grid-cell">'), $cCont) . '</td>
-															</tr>';
-													}
+													$out .= '
+														<tr>
+														<td valign="top" class="t3-grid-cell">' . implode(('</td>' . '
+																	<td valign="top" class="t3-grid-cell">'), $cCont) . '</td>
+														</tr>';
 												}
 											}
-											// Finally, wrap it all in a table and add the language selector on top of it:
-											$out = $languageSelector . '
-												<div class="t3-grid-container">
-												<table cellpadding="0" cellspacing="0" class="t3-page-columns t3-grid-table t3js-page-columns">
-												' . $out . '
-												</table>
-												</div>';
-											// CSH:
-											$out .= BackendUtility::cshItem($this->descrTable, 'language_list');
-											}
+										}
+										// Finally, wrap it all in a table and add the language selector on top of it:
+										$out = $languageSelector . '
+											<div class="t3-grid-container">
+											<table cellpadding="0" cellspacing="0" class="t3-page-columns t3-grid-table t3js-page-columns">
+											' . $out . '
+											</table>
+											</div>';
+										// CSH:
+										$out .= BackendUtility::cshItem($this->descrTable, 'language_list');
+										}
 
-											return $out;
+										return $out;
 	}
 
 	/**
@@ -586,8 +595,7 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 	}
 
 	/**
-	 * Creates onclick-attribute content for a new content element
-	 * Modified copy from: typo3/sysext/cms/layout/class.tx_cms_layout.php
+	 * Adds URL parameters which determine the column/container a new content element will get created in
 	 *
 	 * @param integer Page id where to create the element.
 	 * @param integer $colPos Preset: Column position value
@@ -595,31 +603,24 @@ class PageLayoutView extends \TYPO3\CMS\Backend\View\PageLayoutView {
 	 * @return string String for onclick attribute.
 	 * @see getTable_tt_content()
 	 */
-	public function newContentElementOnClick($id, $colPos, $sys_language) {
+	public function alterNewContentElementUrlParameters($urlParameters) {
 		$element = $this->kbNescefeContext->getRenderedElement();
 		if (! $element instanceof \ThinkopenAt\KbNescefe\Domain\Model\Content) {
-			return parent::newContentElementOnClick($id, $colPos, $sys_language);
+			return $urlParameters;
 		}
 		if ($this->kbNescefeContext->getOptionNewWizard()) {
-			$onClick = 'window.location.href=\'db_new_content_el.php?';
-			$onClick .= 'id=' . $id;
-			$onClick .= '&colPos=' . $this->containerElementColPos;
-			$onClick .= '&sys_language_uid=' . $element->getSysLanguageUid();
-			$onClick .= '&kbnescefe_parentPosition=' . $this->kbNescefeContext->getElementPosition();
-			$onClick .= '&kbnescefe_parentElement=' . $element->getUid();
-			$onClick .= '&uid_pid=' . $id;
-			$onClick .= '&returnUrl=' . rawurlencode(GeneralUtility::getIndpEnv('REQUEST_URI')) . '\';';
+			$urlParameters['kbnescefe_parentPosition'] = $this->kbNescefeContext->getElementPosition();
+			$urlParameters['kbnescefe_parentElement'] = $element->getUid();
+			$urlParameters['colPos'] = $this->containerElementColPos;
+			$urlParameters['sys_language_uid'] = $element->getSysLanguageUid();
 		} else {
-			$editParam = '&edit[tt_content][' . $id. ']=new';
-			$editParam .= '&defVals[tt_content][colPos]=' . $this->containerElementColPos;
-			$editParam .= '&defVals[tt_content][sys_language_uid]=' . $element->getSysLanguageUid();
-			$editParam .= '&defVals[tt_content][kbnescefe_parentPosition]=' . $this->kbNescefeContext->getElementPosition();
-			$editParam .= '&defVals[tt_content][kbnescefe_parentElement]=' . $element->getUid();
-			$onClick = BackendUtility::editOnClick($editParam, $this->backPath);
+			$urlParameters['defVals']['tt_content']['kbnescefe_parentPosition'] = $this->kbNescefeContext->getElementPosition();
+			$urlParameters['defVals']['tt_content']['kbnescefe_parentElement'] = $element->getUid();
+			$urlParameters['defVals']['tt_content']['colPos'] = $this->containerElementColPos;
+			$urlParameters['defVals']['tt_content']['sys_language_uid'] = $element->getSysLanguageUid();
 		}
-		return $onClick;
+		return $urlParameters;
 	}
-
 
 	/**
 	 * Only passes "pasteParams" along if none of the elements on the clipboard is a parent container

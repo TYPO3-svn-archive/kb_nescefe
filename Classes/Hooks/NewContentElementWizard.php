@@ -75,7 +75,10 @@ class NewContentElementWizard implements \TYPO3\CMS\Backend\Wizard\NewContentEle
 		list($parentPosition, $parentElement) = $this->determineParent();
 		$parentParameter = '&defVals[tt_content][kbnescefe_parentPosition]=' . $parentPosition;
 		$parentParameter .= '&defVals[tt_content][kbnescefe_parentElement]=' . $parentElement;
-		$this->parentObject->onClickEvent = str_replace('&returnUrl=', $parentParameter . '&returnUrl=', $this->parentObject->onClickEvent);
+		foreach ($wizardItems as $key => $wInfo) {
+			$wizardItems[$key]['params'] .= $parentParameter;
+		}
+//		$this->parentObject->onClickEvent = str_replace('&returnUrl=', $parentParameter . '&returnUrl=', $this->parentObject->onClickEvent);
 
 			// Warning - Easter egg! --- begin
 		$this->handleEasterEgg();
