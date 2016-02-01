@@ -95,6 +95,8 @@ Changelog
 +---------+----------------------+-------------------------------------------------------+
 | 2.1.0   | 2015-12-21 19:00 CET | - [TASK] Update to TYPO3 7.6 LTS compatibility        |
 +---------+----------------------+-------------------------------------------------------+
+| 2.1.1   | 2016-02-01 15:00 CET | - [BUGFIX] Fix TYPO3 7.6 LTS compatibility            |
++---------+----------------------+-------------------------------------------------------+
 
 .. note:: If you find any bug please report them to office@think-open.at or at the
    issue tracker on TYPO3 forge: https://forge.typo3.org/projects/extension-kb\_nescefe/issues
